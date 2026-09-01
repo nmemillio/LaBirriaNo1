@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { CheckoutButton } from "./checkout-button";
 
-export const metadata: Metadata = { title: "Precios | Medicación" };
+export const metadata: Metadata = { title: "Precios" };
 
 const formatter = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
 

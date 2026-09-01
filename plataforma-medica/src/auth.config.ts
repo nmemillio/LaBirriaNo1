@@ -6,6 +6,11 @@ import type { NextAuthConfig } from "next-auth";
  * La configuración completa (providers, adapter) vive en src/auth.ts.
  */
 export const authConfig: NextAuthConfig = {
+  // Confía en el header Host de la petición para deducir la URL de la app
+  // (dominio de producción y cada preview deploy de Vercel) en vez de
+  // depender de AUTH_URL/NEXTAUTH_URL fijas — recomendado por Auth.js para
+  // despliegues serverless.
+  trustHost: true,
   pages: {
     signIn: "/login",
   },

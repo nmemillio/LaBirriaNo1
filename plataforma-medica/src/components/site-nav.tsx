@@ -15,7 +15,7 @@ export async function SiteNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-border-soft bg-white/85 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between">
-        <Link href="/" aria-label="Medicación, inicio">
+        <Link href="/" aria-label="Galeno, inicio">
           <Logo />
         </Link>
 

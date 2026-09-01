@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { getAppUrl } from "@/lib/app-url";
 
-const appUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-
-export async function POST() {
+export async function POST(req: Request) {
+  const appUrl = getAppUrl(req);
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });

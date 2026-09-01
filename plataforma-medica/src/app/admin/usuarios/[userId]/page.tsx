@@ -6,7 +6,7 @@ import { getAllSemestersProgress, getProgressSummary } from "@/lib/progress";
 import { loadSubjectTree, computeContentStates, flattenContents } from "@/lib/content-tree";
 import { changeUserPlan, unlockContentForUser } from "../actions";
 
-export const metadata: Metadata = { title: "Detalle de usuario | Administración" };
+export const metadata: Metadata = { title: "Admin · Detalle de usuario" };
 
 export default async function AdminUserDetailPage({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;

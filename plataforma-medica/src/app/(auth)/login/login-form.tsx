@@ -41,7 +41,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           </label>
         </div>
 
-        {errorMessage && <p className="mt-4 text-sm text-accent-600">{errorMessage}</p>}
+        {errorMessage && <p className="mt-4 text-sm text-accent-700">{errorMessage}</p>}
 
         <button type="submit" disabled={pending} className="btn-primary mt-6 w-full justify-center py-2.5">
           {pending ? "Entrando..." : "Iniciar sesión"}

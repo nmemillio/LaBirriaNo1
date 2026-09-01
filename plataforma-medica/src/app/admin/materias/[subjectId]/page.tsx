@@ -3,10 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { loadSubjectTree } from "@/lib/content-tree";
+import { isBlobConfigured } from "@/lib/storage";
 import { AdminSectionBlock } from "@/components/admin/admin-section-block";
 import { createSection } from "./actions";
 
-export const metadata: Metadata = { title: "Contenido de la materia | Administración" };
+export const metadata: Metadata = { title: "Admin · Contenido de la materia" };
 
 export default async function AdminSubjectDetailPage({ params }: { params: Promise<{ subjectId: string }> }) {
   const { subjectId } = await params;
@@ -14,6 +15,7 @@ export default async function AdminSubjectDetailPage({ params }: { params: Promi
   if (!subject) notFound();
 
   const tree = await loadSubjectTree(subjectId, { includeUnpublished: true });
+  const blobEnabled = isBlobConfigured();
 
   return (
     <div className="container-page py-8">
@@ -30,7 +32,7 @@ export default async function AdminSubjectDetailPage({ params }: { params: Promi
 
       <div className="mt-6 space-y-4">
         {tree.map((section, i) => (
-          <AdminSectionBlock key={section.id} subjectId={subjectId} section={section} depth={0} siblingCount={tree.length} index={i} />
+          <AdminSectionBlock key={section.id} subjectId={subjectId} section={section} depth={0} siblingCount={tree.length} index={i} blobEnabled={blobEnabled} />
         ))}
         {tree.length === 0 && (
           <div className="card p-8 text-center text-ink-500">Todavía no hay secciones. Crea la primera arriba.</div>

@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
-
-const appUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+import { getAppUrl } from "@/lib/app-url";
 
 export async function POST(req: Request) {
+  const appUrl = getAppUrl(req);
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       create: { id: `sub-${session.user.id}-${plan.id}`, userId: session.user.id, planId: plan.id, status: "FREE" },
       update: { planId: plan.id, status: "FREE" },
     });
-    return NextResponse.json({ redirectUrl: "/app?activated=free" });
+    return NextResponse.json({ redirectUrl: "/app/facturacion?activated=free" });
   }
 
   if (!isStripeConfigured()) {

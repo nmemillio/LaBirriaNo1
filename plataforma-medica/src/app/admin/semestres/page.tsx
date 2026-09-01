@@ -6,7 +6,7 @@ import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { createSemester, updateSemester, setSemesterStatus, deleteSemester, moveSemester } from "./actions";
 
-export const metadata: Metadata = { title: "Semestres | Administración" };
+export const metadata: Metadata = { title: "Admin · Semestres" };
 
 export default async function AdminSemestersPage() {
   const semesters = await prisma.semester.findMany({
@@ -69,7 +69,7 @@ export default async function AdminSemestersPage() {
               </details>
 
               <form action={deleteSemester.bind(null, semester.id)} className="ml-auto">
-                <ConfirmButton confirmText={`¿Eliminar "${semester.title}" y todo su contenido?`} className="btn-ghost text-accent-600">
+                <ConfirmButton confirmText={`¿Eliminar "${semester.title}" y todo su contenido?`} className="btn-ghost text-accent-700">
                   Eliminar
                 </ConfirmButton>
               </form>

@@ -78,7 +78,7 @@ export function QuizView({
             return (
               <div key={q.id} className="rounded-xl border border-border-soft p-4">
                 <p className="text-sm font-semibold text-ink-900">{q.prompt}</p>
-                <p className={`mt-1 text-sm ${detail?.isCorrect ? "text-brand-600" : "text-accent-600"}`}>
+                <p className={`mt-1 text-sm ${detail?.isCorrect ? "text-brand-600" : "text-accent-700"}`}>
                   {detail?.isCorrect ? "Correcto" : "Incorrecto"}
                 </p>
                 {detail?.explanation && <p className="mt-1 text-sm text-ink-500">{detail.explanation}</p>}
@@ -133,7 +133,7 @@ export function QuizView({
         ))}
       </div>
 
-      {error && <p className="mt-4 text-sm text-accent-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-accent-700">{error}</p>}
 
       <button
         type="button"

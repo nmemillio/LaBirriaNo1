@@ -1,7 +1,33 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { saveUploadedFile } from "../src/lib/storage";
 
 const prisma = new PrismaClient();
+
+// Si BLOB_READ_WRITE_TOKEN está configurada (producción en Vercel), los
+// archivos de ejemplo se suben a Vercel Blob igual que lo haría el admin;
+// si no, se referencian tal cual en storage/ (disco local en desarrollo).
+// Se cachean por nombre de archivo porque varios contenidos de ejemplo
+// reutilizan los mismos 3 archivos de demo.
+const assetKeyCache = new Map<string, string>();
+async function demoAssetKey(kind: "videos" | "documents", localFileName: string) {
+  const cacheKey = `${kind}/${localFileName}`;
+  const cached = assetKeyCache.get(cacheKey);
+  if (cached) return cached;
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    assetKeyCache.set(cacheKey, cacheKey);
+    return cacheKey;
+  }
+
+  const fullPath = path.join(__dirname, "..", "storage", kind, localFileName);
+  const data = await fs.readFile(fullPath);
+  const key = await saveUploadedFile(kind, localFileName, data);
+  assetKeyCache.set(cacheKey, key);
+  return key;
+}
 
 const PLAN_FEATURES = JSON.stringify([
   "Acceso a todos los semestres publicados",
@@ -194,7 +220,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: anatVideo1.id },
-    create: { contentId: anatVideo1.id, storageKey: "videos/demo-intro.mp4", durationSeconds: 10 },
+    create: { contentId: anatVideo1.id, storageKey: await demoAssetKey("videos", "demo-intro.mp4"), durationSeconds: 10 },
     update: {},
   });
 
@@ -214,7 +240,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: anatVideo2.id },
-    create: { contentId: anatVideo2.id, storageKey: "videos/demo-g1.mp4", durationSeconds: 8 },
+    create: { contentId: anatVideo2.id, storageKey: await demoAssetKey("videos", "demo-g1.mp4"), durationSeconds: 8 },
     update: {},
   });
 
@@ -234,7 +260,7 @@ async function main() {
     where: { contentId: anatPdf.id },
     create: {
       contentId: anatPdf.id,
-      storageKey: "documents/demo-apuntes.pdf",
+      storageKey: await demoAssetKey("documents", "demo-apuntes.pdf"),
       fileName: "Terminologia-anatomica.pdf",
     },
     update: {},
@@ -281,7 +307,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: fisioVideo1.id },
-    create: { contentId: fisioVideo1.id, storageKey: "videos/demo-intro.mp4", durationSeconds: 10 },
+    create: { contentId: fisioVideo1.id, storageKey: await demoAssetKey("videos", "demo-intro.mp4"), durationSeconds: 10 },
     update: {},
   });
 
@@ -301,7 +327,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: fisioVideo2.id },
-    create: { contentId: fisioVideo2.id, storageKey: "videos/demo-g1.mp4", durationSeconds: 8 },
+    create: { contentId: fisioVideo2.id, storageKey: await demoAssetKey("videos", "demo-g1.mp4"), durationSeconds: 8 },
     update: {},
   });
 
@@ -361,7 +387,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: bioVideo1.id },
-    create: { contentId: bioVideo1.id, storageKey: "videos/demo-intro.mp4", durationSeconds: 10 },
+    create: { contentId: bioVideo1.id, storageKey: await demoAssetKey("videos", "demo-intro.mp4"), durationSeconds: 10 },
     update: {},
   });
 
@@ -380,7 +406,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: bioVideo2.id },
-    create: { contentId: bioVideo2.id, storageKey: "videos/demo-g1.mp4", durationSeconds: 8 },
+    create: { contentId: bioVideo2.id, storageKey: await demoAssetKey("videos", "demo-g1.mp4"), durationSeconds: 8 },
     update: {},
   });
 
@@ -399,7 +425,7 @@ async function main() {
   });
   await prisma.videoAsset.upsert({
     where: { contentId: bioVideo3.id },
-    create: { contentId: bioVideo3.id, storageKey: "videos/demo-intro.mp4", durationSeconds: 10 },
+    create: { contentId: bioVideo3.id, storageKey: await demoAssetKey("videos", "demo-intro.mp4"), durationSeconds: 10 },
     update: {},
   });
 
@@ -417,7 +443,7 @@ async function main() {
   });
   await prisma.document.upsert({
     where: { contentId: bioPdf.id },
-    create: { contentId: bioPdf.id, storageKey: "documents/demo-apuntes.pdf", fileName: "Ciclo-celular.pdf" },
+    create: { contentId: bioPdf.id, storageKey: await demoAssetKey("documents", "demo-apuntes.pdf"), fileName: "Ciclo-celular.pdf" },
     update: {},
   });
 

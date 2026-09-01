@@ -1,40 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7faf9;
-  --foreground: #0b1f1c;
+  --background: #fbf7ee;
+  --foreground: #211d16;
 
-  /* Paleta "clínica" — teal profundo como color de marca, coral cálido como
-     acento de acción. Deliberadamente sin cruces médicas ni azul/blanco de
-     hospital genérico. */
-  --brand-50: #eef8f5;
-  --brand-100: #d8efe8;
-  --brand-200: #b3ded2;
-  --brand-300: #83c7b6;
-  --brand-400: #4fa896;
-  --brand-500: #2f8b7a;
-  --brand-600: #1f6f61;
-  --brand-700: #1a594e;
-  --brand-800: #17453d;
-  --brand-900: #0f2e28;
-  --brand-950: #081b17;
+  /* Paleta "Galeno" — esmeralda profundo como color de marca (serio,
+     confiable, con vida) y dorado cálido como acento de estatus/premium,
+     sobre un marfil cálido en vez del blanco/gris frío típico de SaaS.
+     Deliberadamente sin cruces médicas ni azul de hospital genérico. */
+  --brand-50: #edf7f1;
+  --brand-100: #d3eedf;
+  --brand-200: #a8dcc0;
+  --brand-300: #78c59d;
+  --brand-400: #4ca97d;
+  --brand-500: #2e8c63;
+  --brand-600: #1f7150;
+  --brand-700: #1a5b41;
+  --brand-800: #164a36;
+  --brand-900: #0f3527;
+  --brand-950: #082018;
 
-  --accent-50: #fef3f0;
-  --accent-100: #fde3db;
-  --accent-300: #f7a68e;
-  --accent-400: #f28362;
-  --accent-500: #e8623c;
-  --accent-600: #d24d29;
-  --accent-700: #af3b1f;
+  --accent-50: #fdf6e9;
+  --accent-100: #faeac6;
+  --accent-200: #f2d48a;
+  --accent-300: #eabd5e;
+  --accent-400: #e4a74a;
+  --accent-500: #d89226;
+  --accent-600: #b87511;
+  --accent-700: #8f5a0d;
 
-  --ink-900: #0b1f1c;
-  --ink-700: #2c433e;
-  --ink-500: #5c716c;
-  --ink-300: #a8bab5;
+  --ink-900: #211d16;
+  --ink-700: #4b453b;
+  --ink-500: #7a7365;
+  --ink-300: #c4bcab;
 
   --surface: #ffffff;
-  --surface-muted: #f0f6f4;
-  --border-soft: #dfe9e6;
+  --surface-muted: #f7f1e4;
+  --border-soft: #e7dcc4;
 }
 
 @theme inline {
@@ -55,6 +57,7 @@
 
   --color-accent-50: var(--accent-50);
   --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
   --color-accent-300: var(--accent-300);
   --color-accent-400: var(--accent-400);
   --color-accent-500: var(--accent-500);
@@ -88,7 +91,7 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-brand-600 text-white hover:bg-brand-700 shadow-sm shadow-brand-900/10;
   }
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-accent-500 text-white hover:bg-accent-600 shadow-sm shadow-accent-700/20;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-accent-400 text-ink-900 hover:bg-accent-500 shadow-sm shadow-accent-700/20;
   }
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none border border-border-soft bg-white text-ink-900 hover:bg-surface-muted;

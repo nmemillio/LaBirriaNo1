@@ -53,7 +53,7 @@ export function CheckoutButton({
       >
         {pending ? "Procesando..." : label}
       </button>
-      {notice && <p className="mt-3 text-sm text-accent-600">{notice}</p>}
+      {notice && <p className="mt-3 text-sm text-accent-700">{notice}</p>}
     </div>
   );
 }

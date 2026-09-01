@@ -5,7 +5,7 @@ import { getUserActiveSubscription } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { ManageBillingButton } from "./manage-billing-button";
 
-export const metadata: Metadata = { title: "Facturación | Medicación" };
+export const metadata: Metadata = { title: "Facturación" };
 
 const formatter = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
 

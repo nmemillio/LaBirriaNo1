@@ -26,7 +26,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-border-soft py-4 text-center text-xs text-ink-500">
-        © {new Date().getFullYear()} Medicación. Plataforma educativa — no sustituye la formación clínica supervisada.
+        © {new Date().getFullYear()} Galeno. Plataforma educativa — no sustituye la formación clínica supervisada.
       </div>
     </footer>
   );

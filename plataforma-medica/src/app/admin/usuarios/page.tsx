@@ -5,7 +5,7 @@ import { getProgressSummary } from "@/lib/progress";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { toggleSuspend } from "./actions";
 
-export const metadata: Metadata = { title: "Usuarios | Administración" };
+export const metadata: Metadata = { title: "Admin · Usuarios" };
 
 export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams;
@@ -68,7 +68,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                       <input type="hidden" name="suspend" value={user.suspendedAt ? "false" : "true"} />
                       <ConfirmButton
                         confirmText={user.suspendedAt ? "¿Reactivar esta cuenta?" : "¿Suspender esta cuenta?"}
-                        className="btn-ghost text-xs text-accent-600"
+                        className="btn-ghost text-xs text-accent-700"
                       >
                         {user.suspendedAt ? "Reactivar" : "Suspender"}
                       </ConfirmButton>

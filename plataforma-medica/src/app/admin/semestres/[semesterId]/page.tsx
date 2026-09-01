@@ -7,7 +7,7 @@ import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { createSubject, updateSubject, setSubjectStatus, deleteSubject, moveSubject } from "./actions";
 
-export const metadata: Metadata = { title: "Materias | Administración" };
+export const metadata: Metadata = { title: "Admin · Materias" };
 
 export default async function AdminSemesterDetailPage({ params }: { params: Promise<{ semesterId: string }> }) {
   const { semesterId } = await params;
@@ -77,7 +77,7 @@ export default async function AdminSemesterDetailPage({ params }: { params: Prom
               </details>
 
               <form action={deleteSubject.bind(null, semesterId, subject.id)} className="ml-auto">
-                <ConfirmButton confirmText={`¿Eliminar "${subject.title}" y todo su contenido?`} className="btn-ghost text-accent-600">
+                <ConfirmButton confirmText={`¿Eliminar "${subject.title}" y todo su contenido?`} className="btn-ghost text-accent-700">
                   Eliminar
                 </ConfirmButton>
               </form>

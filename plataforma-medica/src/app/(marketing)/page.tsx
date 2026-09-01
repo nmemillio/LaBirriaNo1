@@ -211,7 +211,7 @@ function StatusDot({ state }: { state: "done" | "active" | "locked" }) {
     return <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-[10px] text-white">✓</span>;
   }
   if (state === "active") {
-    return <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-500 text-[10px] text-white">▶</span>;
+    return <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-400 text-[10px] text-ink-900">▶</span>;
   }
   return (
     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-surface-muted text-[10px] text-ink-300">

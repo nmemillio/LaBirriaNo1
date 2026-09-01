@@ -8,8 +8,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// PostgreSQL en dev y en producción (no SQLite): Vercel corre en funciones
+// serverless con filesystem efímero, así que una base de archivo no
+// sobrevive entre invocaciones. Usa un Postgres real incluso en local (ver
+// README) para que el comportamiento sea idéntico al de producción.
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

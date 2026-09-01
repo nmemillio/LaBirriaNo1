@@ -130,6 +130,59 @@ export async function createPdfContent(subjectId: string, sectionId: string, for
   revalidate(subjectId);
 }
 
+// Variantes usadas cuando el archivo ya se subió directo del navegador a
+// Vercel Blob (ver VideoUploadForm/PdfUploadForm) — evita el límite de
+// tamaño de body de las funciones serverless de Vercel para archivos
+// grandes. Reciben la URL de Blob en vez del archivo.
+
+export async function createVideoContentFromUrl(subjectId: string, sectionId: string, formData: FormData) {
+  await requireAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const completionThreshold = Number(formData.get("completionThreshold") ?? 90);
+  const blobUrl = String(formData.get("blobUrl") ?? "").trim();
+  if (!title || !blobUrl) return;
+
+  const order = await nextContentOrder(sectionId);
+  await prisma.content.create({
+    data: {
+      sectionId,
+      type: "VIDEO",
+      title,
+      description: description || null,
+      order,
+      completionThreshold: Number.isFinite(completionThreshold) ? completionThreshold : 90,
+      video: { create: { storageKey: blobUrl } },
+    },
+  });
+  revalidate(subjectId);
+}
+
+export async function createPdfContentFromUrl(subjectId: string, sectionId: string, formData: FormData) {
+  await requireAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const blobUrl = String(formData.get("blobUrl") ?? "").trim();
+  const fileName = String(formData.get("fileName") ?? "documento.pdf").trim();
+  const fileSizeKb = Number(formData.get("fileSizeKb") ?? 0);
+  if (!title || !blobUrl) return;
+
+  const order = await nextContentOrder(sectionId);
+  await prisma.content.create({
+    data: {
+      sectionId,
+      type: "PDF",
+      title,
+      description: description || null,
+      order,
+      document: {
+        create: { storageKey: blobUrl, fileName, fileSizeKb: Number.isFinite(fileSizeKb) ? fileSizeKb : null },
+      },
+    },
+  });
+  revalidate(subjectId);
+}
+
 export async function createQuizContent(subjectId: string, sectionId: string, formData: FormData) {
   await requireAdmin();
   const title = String(formData.get("title") ?? "").trim();

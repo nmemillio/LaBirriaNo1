@@ -2,14 +2,14 @@ import type { SectionNode } from "@/lib/content-tree";
 import { STATUS_OPTIONS, STATUS_BADGE_CLASS, STATUS_LABEL, CONTENT_TYPE_LABEL } from "@/lib/labels";
 import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
 import { ConfirmButton } from "@/components/admin/confirm-button";
+import { VideoUploadForm } from "@/components/admin/video-upload-form";
+import { PdfUploadForm } from "@/components/admin/pdf-upload-form";
 import {
   createSection,
   updateSection,
   setSectionStatus,
   deleteSection,
   moveSection,
-  createVideoContent,
-  createPdfContent,
   createQuizContent,
   updateContentMeta,
   setContentStatus,
@@ -25,12 +25,14 @@ export function AdminSectionBlock({
   depth,
   siblingCount,
   index,
+  blobEnabled,
 }: {
   subjectId: string;
   section: SectionNode;
   depth: number;
   siblingCount: number;
   index: number;
+  blobEnabled: boolean;
 }) {
   return (
     <div className="card p-5" style={{ marginLeft: depth * 20 }}>
@@ -75,7 +77,7 @@ export function AdminSectionBlock({
         </details>
 
         <form action={deleteSection.bind(null, subjectId, section.id)} className="ml-auto">
-          <ConfirmButton confirmText={`¿Eliminar "${section.title}" y su contenido?`} className="btn-ghost text-accent-600">
+          <ConfirmButton confirmText={`¿Eliminar "${section.title}" y su contenido?`} className="btn-ghost text-accent-700">
             Eliminar sección
           </ConfirmButton>
         </form>
@@ -155,7 +157,7 @@ export function AdminSectionBlock({
                           <div className="flex items-start justify-between gap-2">
                             <p className="font-medium text-ink-900">{q.prompt}</p>
                             <form action={deleteQuizQuestion.bind(null, subjectId, q.id)}>
-                              <ConfirmButton confirmText="¿Eliminar esta pregunta?" className="text-accent-600">
+                              <ConfirmButton confirmText="¿Eliminar esta pregunta?" className="text-accent-700">
                                 Eliminar
                               </ConfirmButton>
                             </form>
@@ -187,7 +189,7 @@ export function AdminSectionBlock({
                 )}
 
                 <form action={deleteContent.bind(null, subjectId, content.id)} className="ml-auto">
-                  <ConfirmButton confirmText={`¿Eliminar "${content.title}"?`} className="btn-ghost text-xs text-accent-600">
+                  <ConfirmButton confirmText={`¿Eliminar "${content.title}"?`} className="btn-ghost text-xs text-accent-700">
                     Eliminar
                   </ConfirmButton>
                 </form>
@@ -200,26 +202,12 @@ export function AdminSectionBlock({
       <div className="mt-4 flex flex-wrap gap-4 border-t border-border-soft pt-4 text-sm">
         <details>
           <summary className="cursor-pointer font-medium text-brand-600">+ Video</summary>
-          <form action={createVideoContent.bind(null, subjectId, section.id)} className="mt-3 space-y-2 rounded-lg bg-surface-muted p-3">
-            <input className="input" type="text" name="title" placeholder="Título del video" required />
-            <input className="input" type="text" name="description" placeholder="Descripción (opcional)" />
-            <label className="block text-xs text-ink-500">
-              % para completar
-              <input className="input mt-1" type="number" name="completionThreshold" defaultValue={90} min={1} max={100} />
-            </label>
-            <input className="input" type="file" name="file" accept="video/*" required />
-            <button type="submit" className="btn-primary">Subir video</button>
-          </form>
+          <VideoUploadForm subjectId={subjectId} sectionId={section.id} blobEnabled={blobEnabled} />
         </details>
 
         <details>
           <summary className="cursor-pointer font-medium text-brand-600">+ PDF</summary>
-          <form action={createPdfContent.bind(null, subjectId, section.id)} className="mt-3 space-y-2 rounded-lg bg-surface-muted p-3">
-            <input className="input" type="text" name="title" placeholder="Título del PDF" required />
-            <input className="input" type="text" name="description" placeholder="Descripción (opcional)" />
-            <input className="input" type="file" name="file" accept="application/pdf" required />
-            <button type="submit" className="btn-primary">Subir PDF</button>
-          </form>
+          <PdfUploadForm subjectId={subjectId} sectionId={section.id} blobEnabled={blobEnabled} />
         </details>
 
         <details>
@@ -241,7 +229,7 @@ export function AdminSectionBlock({
 
       {section.children.map((child, i) => (
         <div key={child.id} className="mt-4">
-          <AdminSectionBlock subjectId={subjectId} section={child} depth={depth + 1} siblingCount={section.children.length} index={i} />
+          <AdminSectionBlock subjectId={subjectId} section={child} depth={depth + 1} siblingCount={section.children.length} index={i} blobEnabled={blobEnabled} />
         </div>
       ))}
     </div>

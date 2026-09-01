@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { getDashboardData } from "@/lib/dashboard";
 import { ProgressBar } from "@/components/progress-bar";
 
-export const metadata: Metadata = { title: "Mi panel | Medicación" };
+export const metadata: Metadata = { title: "Mi panel" };
 
 export default async function StudentDashboardPage() {
   const session = await auth();

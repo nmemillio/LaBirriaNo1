@@ -5,7 +5,7 @@ import { getAllSemestersProgress, getProgressSummary } from "@/lib/progress";
 import { getActivePlanForUser } from "@/lib/plan-label";
 import { ProgressBar } from "@/components/progress-bar";
 
-export const metadata: Metadata = { title: "Mi perfil | Medicación" };
+export const metadata: Metadata = { title: "Mi perfil" };
 
 export default async function ProfilePage() {
   const session = await auth();

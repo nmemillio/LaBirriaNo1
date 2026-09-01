@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
-export const metadata: Metadata = { title: "Panel de administración | Medicación" };
+export const metadata: Metadata = { title: "Panel de administración" };
 
 export default async function AdminDashboardPage() {
   const [
