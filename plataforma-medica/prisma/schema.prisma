@@ -1,0 +1,412 @@
+// Esquema de base de datos — Plataforma educativa de medicina
+// Fase 1 (implementada en UI): auth, semestres, materias, secciones, contenido (video/pdf),
+//   progreso dinámico, desbloqueo secuencial/libre/manual.
+// Fase 2-4 (modeladas aquí para no romper la arquitectura después, UI pendiente):
+//   quizzes, comentarios/preguntas, estadísticas de video, planes/suscripciones/pagos vía Stripe.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Auth ----------
+
+enum Role {
+  ADMIN
+  STUDENT
+  PROFESSOR // reservado para uso futuro (sección 19 del brief)
+  MODERATOR // reservado para uso futuro
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String? // null cuando el usuario solo usa Google
+  role          Role      @default(STUDENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  suspendedAt   DateTime? // suspensión de cuenta por el admin
+
+  accounts      Account[]
+  sessions      Session[]
+  subscriptions Subscription[]
+  payments      Payment[]
+  progress      ContentProgress[]
+  comments      Comment[]
+  videoViews    VideoView[]
+  manualUnlocksReceived ManualUnlock[] @relation("UnlockedUser")
+  manualUnlocksGranted  ManualUnlock[] @relation("UnlockGrantedBy")
+  quizAttempts  QuizAttempt[]
+
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------- Estructura educativa ----------
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
+enum UnlockMode {
+  SEQUENTIAL // el siguiente se desbloquea al completar el anterior
+  FREE // todo disponible desde el inicio
+  MANUAL // el admin desbloquea contenido específico por usuario
+}
+
+model Semester {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  order       Int           @default(0)
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  subjects Subject[]
+
+  @@index([order])
+}
+
+model Subject {
+  id          String        @id @default(cuid())
+  semesterId  String
+  title       String
+  description String?
+  order       Int           @default(0)
+  status      PublishStatus @default(DRAFT)
+  unlockMode  UnlockMode    @default(SEQUENTIAL)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  semester Semester  @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  sections Section[]
+
+  @@index([semesterId, order])
+}
+
+// "Sección" = subsección del brief. Se permite anidar (parentId) para dar
+// la profundidad flexible que pide el punto 4, sin obligar a usarla.
+model Section {
+  id          String        @id @default(cuid())
+  subjectId   String
+  parentId    String?
+  title       String
+  description String?
+  order       Int           @default(0)
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  subject  Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  parent   Section?  @relation("SectionChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children Section[] @relation("SectionChildren")
+  contents Content[]
+
+  @@index([subjectId, order])
+  @@index([parentId, order])
+}
+
+enum ContentType {
+  VIDEO
+  PDF
+  QUIZ
+}
+
+model Content {
+  id          String        @id @default(cuid())
+  sectionId   String
+  type        ContentType
+  title       String
+  description String?
+  order       Int           @default(0)
+  status      PublishStatus @default(DRAFT)
+  // % del video que debe verse para marcarlo completado (punto 32). Editable por el admin.
+  completionThreshold Int   @default(90)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  section  Section       @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  video    VideoAsset?
+  document Document?
+  quiz     Quiz?
+
+  progress      ContentProgress[]
+  comments      Comment[]
+  videoViews    VideoView[]
+  manualUnlocks ManualUnlock[]
+
+  @@index([sectionId, order])
+}
+
+model VideoAsset {
+  id            String   @id @default(cuid())
+  contentId     String   @unique
+  storageKey    String // ruta/clave en el storage protegido (no una URL pública)
+  thumbnailPath String?
+  durationSeconds Int?
+  createdAt     DateTime @default(now())
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  contentId  String   @unique
+  storageKey String
+  fileName   String
+  fileSizeKb Int?
+  createdAt  DateTime @default(now())
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+}
+
+model Quiz {
+  id               String   @id @default(cuid())
+  contentId        String   @unique
+  passingScore     Int      @default(70) // porcentaje mínimo para aprobar
+  maxAttempts      Int?     // null = ilimitado
+  createdAt        DateTime @default(now())
+
+  content   Content        @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+}
+
+model QuizQuestion {
+  id       String @id @default(cuid())
+  quizId   String
+  prompt   String
+  order    Int    @default(0)
+  explanation String?
+
+  quiz    Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+
+  @@index([quizId, order])
+}
+
+model QuizAnswer {
+  id         String  @id @default(cuid())
+  questionId String
+  text       String
+  isCorrect  Boolean @default(false)
+  order      Int     @default(0)
+
+  question QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  quizId    String
+  userId    String
+  score     Int
+  passed    Boolean
+  createdAt DateTime @default(now())
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([quizId, userId])
+}
+
+// ---------- Progreso ----------
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+// El % global nunca se guarda como número fijo (punto 8): siempre se calcula
+// a partir de ContentProgress vs. el contenido publicado actual.
+model ContentProgress {
+  id             String         @id @default(cuid())
+  userId         String
+  contentId      String
+  status         ProgressStatus @default(NOT_STARTED)
+  watchedSeconds Int            @default(0)
+  watchedPercent Int            @default(0)
+  completedAt    DateTime?
+  updatedAt      DateTime       @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, contentId])
+  @@index([userId])
+}
+
+model ManualUnlock {
+  id            String   @id @default(cuid())
+  userId        String
+  contentId     String
+  unlockedById  String
+  reason        String?
+  createdAt     DateTime @default(now())
+
+  user        User    @relation("UnlockedUser", fields: [userId], references: [id], onDelete: Cascade)
+  content     Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  unlockedBy  User    @relation("UnlockGrantedBy", fields: [unlockedById], references: [id])
+
+  @@unique([userId, contentId])
+}
+
+// ---------- Preguntas y discusión ----------
+
+model Comment {
+  id         String   @id @default(cuid())
+  contentId  String
+  userId     String
+  parentId   String?
+  body       String
+  isOfficial Boolean  @default(false)
+  isDeleted  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  content Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[] @relation("CommentReplies")
+
+  @@index([contentId])
+}
+
+// ---------- Analítica de video ----------
+
+model VideoView {
+  id             String   @id @default(cuid())
+  contentId      String
+  userId         String
+  secondsWatched Int      @default(0)
+  maxPercent     Int      @default(0)
+  completed      Boolean  @default(false)
+  startedAt      DateTime @default(now())
+  lastEventAt    DateTime @updatedAt
+
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Un registro por usuario/contenido: se actualiza en vez de crear uno nuevo
+  // por cada refresh/play para no inflar visualizaciones (punto 14).
+  @@unique([userId, contentId])
+}
+
+// ---------- Planes y pagos (Stripe) ----------
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+model Plan {
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  priceCents    Int
+  currency      String          @default("mxn")
+  interval      BillingInterval @default(MONTH)
+  features      String // JSON-encoded string[] — mismas ventajas por ahora en ambos planes
+  stripePriceId String? // se llena al conectar Stripe (Price API)
+  isActive      Boolean         @default(true)
+  order         Int             @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  subscriptions Subscription[]
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  FREE // plan gratuito, no pasa por Stripe
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String
+  planId               String
+  status               SubscriptionStatus @default(FREE)
+  stripeCustomerId     String?
+  stripeSubscriptionId String?            @unique
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan     Plan      @relation(fields: [planId], references: [id])
+  payments Payment[]
+
+  @@index([userId])
+}
+
+enum PaymentStatus {
+  SUCCEEDED
+  FAILED
+  PENDING
+  REFUNDED
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  userId                String
+  subscriptionId        String?
+  stripePaymentIntentId String?       @unique
+  amountCents           Int
+  currency              String        @default("mxn")
+  status                PaymentStatus @default(PENDING)
+  createdAt             DateTime      @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@index([userId])
+}

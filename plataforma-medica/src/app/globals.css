@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7faf9;
+  --foreground: #0b1f1c;
+
+  /* Paleta "clínica" — teal profundo como color de marca, coral cálido como
+     acento de acción. Deliberadamente sin cruces médicas ni azul/blanco de
+     hospital genérico. */
+  --brand-50: #eef8f5;
+  --brand-100: #d8efe8;
+  --brand-200: #b3ded2;
+  --brand-300: #83c7b6;
+  --brand-400: #4fa896;
+  --brand-500: #2f8b7a;
+  --brand-600: #1f6f61;
+  --brand-700: #1a594e;
+  --brand-800: #17453d;
+  --brand-900: #0f2e28;
+  --brand-950: #081b17;
+
+  --accent-50: #fef3f0;
+  --accent-100: #fde3db;
+  --accent-300: #f7a68e;
+  --accent-400: #f28362;
+  --accent-500: #e8623c;
+  --accent-600: #d24d29;
+  --accent-700: #af3b1f;
+
+  --ink-900: #0b1f1c;
+  --ink-700: #2c433e;
+  --ink-500: #5c716c;
+  --ink-300: #a8bab5;
+
+  --surface: #ffffff;
+  --surface-muted: #f0f6f4;
+  --border-soft: #dfe9e6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+
+  --color-ink-900: var(--ink-900);
+  --color-ink-700: var(--ink-700);
+  --color-ink-500: var(--ink-500);
+  --color-ink-300: var(--ink-300);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border-soft: var(--border-soft);
+
+  --font-sans: var(--font-jakarta);
+}
+
+* {
+  border-color: var(--border-soft);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-brand-600 text-white hover:bg-brand-700 shadow-sm shadow-brand-900/10;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-accent-500 text-white hover:bg-accent-600 shadow-sm shadow-accent-700/20;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none border border-border-soft bg-white text-ink-900 hover:bg-surface-muted;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none text-ink-700 hover:bg-surface-muted;
+  }
+
+  .card {
+    @apply rounded-2xl border border-border-soft bg-surface shadow-sm shadow-brand-900/5;
+  }
+
+  .badge-brand {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-50 text-brand-700;
+  }
+  .badge-accent {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-accent-50 text-accent-700;
+  }
+  .badge-muted {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-surface-muted text-ink-500;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-border-soft bg-white px-4 py-2.5 text-sm text-ink-900 placeholder:text-ink-300 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100;
+  }
+
+  .progress-track {
+    @apply h-2 w-full overflow-hidden rounded-full bg-surface-muted;
+  }
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-[width] duration-500;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
+  }
+}
