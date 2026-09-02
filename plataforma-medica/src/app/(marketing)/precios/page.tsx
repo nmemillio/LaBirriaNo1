@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { CheckoutButton } from "./checkout-button";
+import { CheckoutButton } from "@/components/billing/checkout-button";
 
 export const metadata: Metadata = { title: "Precios" };
 
@@ -21,22 +21,22 @@ export default async function PricingPage() {
           Un plan para cada momento del semestre.
         </h1>
         <p className="mt-4 text-lg text-ink-700">
-          Por ahora, el plan Gratuito y el Premium incluyen exactamente las mismas ventajas.
-          El plan Premium existe para quienes quieren apoyar el desarrollo de la plataforma —
-          las funciones exclusivas llegarán más adelante.
+          Por ahora, todos los planes incluyen exactamente las mismas ventajas. El plan
+          Estudiantes y el Premium existen para quienes quieren apoyar el desarrollo de la
+          plataforma — las funciones exclusivas llegarán más adelante.
         </p>
       </div>
 
-      <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:mx-auto sm:max-w-3xl sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0">
+      <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:mx-auto sm:max-w-4xl sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0">
         {plans.map((plan, index) => {
           const features: string[] = JSON.parse(plan.features);
-          const isPremium = index === 1;
+          const isFeatured = index === plans.length - 1 && plan.priceCents > 0;
           return (
             <div
               key={plan.id}
-              className={`card relative flex w-[82%] shrink-0 snap-center flex-col p-8 sm:w-auto sm:shrink ${isPremium ? "border-brand-300 ring-1 ring-brand-200" : ""}`}
+              className={`card relative flex w-[82%] shrink-0 snap-center flex-col p-8 sm:w-auto sm:shrink ${isFeatured ? "border-brand-300 ring-1 ring-brand-200" : ""}`}
             >
-              {isPremium && (
+              {isFeatured && (
                 <span className="badge-accent absolute -top-3 left-8">Apoya la plataforma</span>
               )}
               <h2 className="text-xl font-bold text-ink-900">{plan.name}</h2>
@@ -67,7 +67,7 @@ export default async function PricingPage() {
                 <CheckoutButton
                   planId={plan.id}
                   isAuthenticated={Boolean(session?.user)}
-                  variant={isPremium ? "accent" : "primary"}
+                  variant={isFeatured ? "accent" : "primary"}
                   label={plan.priceCents === 0 ? "Empezar gratis" : "Suscribirme"}
                 />
               </div>

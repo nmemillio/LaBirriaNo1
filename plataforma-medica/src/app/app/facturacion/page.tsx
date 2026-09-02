@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { getUserActiveSubscription } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { ManageBillingButton } from "./manage-billing-button";
+import { CheckoutButton } from "@/components/billing/checkout-button";
 
 export const metadata: Metadata = { title: "Facturación" };
 
@@ -12,20 +13,39 @@ const formatter = new Intl.NumberFormat("es-MX", { style: "currency", currency: 
 export default async function BillingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ checkout?: string; activated?: string }>;
+  searchParams: Promise<{ checkout?: string; activated?: string; comprar?: string }>;
 }) {
-  const { checkout, activated } = await searchParams;
+  const { checkout, activated, comprar } = await searchParams;
   const session = await auth();
   const userId = session!.user.id;
 
-  const [subscription, payments] = await Promise.all([
+  const [subscription, payments, pendingPlan] = await Promise.all([
     getUserActiveSubscription(userId),
     prisma.payment.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 10 }),
+    comprar ? prisma.plan.findUnique({ where: { id: comprar } }) : Promise.resolve(null),
   ]);
 
   return (
     <div className="container-page max-w-3xl py-10">
       <h1 className="text-2xl font-bold text-ink-900">Facturación</h1>
+
+      {pendingPlan && pendingPlan.isActive && pendingPlan.id !== subscription?.plan.id && (
+        <div className="card mt-4 border-brand-300 p-6 ring-1 ring-brand-200">
+          <span className="badge-accent">Completa tu suscripción</span>
+          <p className="mt-3 text-lg font-bold text-ink-900">
+            {pendingPlan.priceCents === 0 ? pendingPlan.name : `${pendingPlan.name} — ${formatter.format(pendingPlan.priceCents / 100)}/mes`}
+          </p>
+          <p className="mt-1 text-sm text-ink-500">{pendingPlan.description}</p>
+          <div className="mt-4 max-w-xs">
+            <CheckoutButton
+              planId={pendingPlan.id}
+              isAuthenticated
+              variant="accent"
+              label={pendingPlan.priceCents === 0 ? "Activar plan gratuito" : "Confirmar suscripción"}
+            />
+          </div>
+        </div>
+      )}
 
       {checkout === "success" && (
         <p className="mt-4 rounded-xl bg-brand-50 px-4 py-3 text-sm text-brand-700">

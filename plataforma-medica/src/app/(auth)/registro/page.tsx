@@ -4,6 +4,11 @@ import { RegisterForm } from "./register-form";
 
 export const metadata: Metadata = { title: "Crear cuenta" };
 
-export default function RegisterPage() {
-  return <RegisterForm googleEnabled={isGoogleLoginEnabled} />;
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ plan?: string }>;
+}) {
+  const { plan } = await searchParams;
+  return <RegisterForm googleEnabled={isGoogleLoginEnabled} plan={plan} />;
 }

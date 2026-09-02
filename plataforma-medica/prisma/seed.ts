@@ -39,34 +39,49 @@ const PLAN_FEATURES = JSON.stringify([
 
 async function main() {
   console.log("Sembrando planes...");
+  const freePlanData = {
+    name: "Plan Gratuito",
+    description: "Empieza a estudiar sin costo. Mismas ventajas que los demás planes por ahora.",
+    priceCents: 0,
+    currency: "mxn" as const,
+    interval: "MONTH" as const,
+    features: PLAN_FEATURES,
+    order: 1,
+  };
   await prisma.plan.upsert({
     where: { id: "plan-free" },
-    create: {
-      id: "plan-free",
-      name: "Plan Gratuito",
-      description: "Empieza a estudiar sin costo. Mismas ventajas que Premium por ahora.",
-      priceCents: 0,
-      currency: "mxn",
-      interval: "MONTH",
-      features: PLAN_FEATURES,
-      order: 1,
-    },
-    update: { features: PLAN_FEATURES },
+    create: { id: "plan-free", ...freePlanData },
+    update: freePlanData,
   });
 
+  const studentPlanData = {
+    name: "Plan Estudiantes",
+    description: "Precio especial para estudiantes. Mismas ventajas que los demás planes por ahora.",
+    priceCents: 25000,
+    currency: "mxn" as const,
+    interval: "MONTH" as const,
+    features: PLAN_FEATURES,
+    order: 2,
+  };
+  await prisma.plan.upsert({
+    where: { id: "plan-estudiantes" },
+    create: { id: "plan-estudiantes", ...studentPlanData },
+    update: studentPlanData,
+  });
+
+  const premiumPlanData = {
+    name: "Plan Premium",
+    description: "Apoya el desarrollo de la plataforma. Mismas ventajas que los demás planes por ahora.",
+    priceCents: 49900,
+    currency: "mxn" as const,
+    interval: "MONTH" as const,
+    features: PLAN_FEATURES,
+    order: 3,
+  };
   await prisma.plan.upsert({
     where: { id: "plan-premium" },
-    create: {
-      id: "plan-premium",
-      name: "Plan Premium",
-      description: "Apoya el desarrollo de la plataforma. Mismas ventajas que el plan gratuito por ahora.",
-      priceCents: 39900,
-      currency: "mxn",
-      interval: "MONTH",
-      features: PLAN_FEATURES,
-      order: 2,
-    },
-    update: { features: PLAN_FEATURES },
+    create: { id: "plan-premium", ...premiumPlanData },
+    update: premiumPlanData,
   });
 
   console.log("Sembrando usuarios de prueba...");

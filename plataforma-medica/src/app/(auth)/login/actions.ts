@@ -4,11 +4,14 @@ import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 
 export async function authenticateWithCredentials(_prevState: string | undefined, formData: FormData) {
+  const planId = formData.get("plan");
+  const redirectTo = typeof planId === "string" && planId ? `/app/facturacion?comprar=${planId}` : "/app";
+
   try {
     await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
-      redirectTo: "/app",
+      redirectTo,
     });
     return undefined;
   } catch (error) {
@@ -24,6 +27,8 @@ export async function authenticateWithCredentials(_prevState: string | undefined
   }
 }
 
-export async function authenticateWithGoogle() {
-  await signIn("google", { redirectTo: "/app" });
+export async function authenticateWithGoogle(formData: FormData) {
+  const planId = formData.get("plan");
+  const redirectTo = typeof planId === "string" && planId ? `/app/facturacion?comprar=${planId}` : "/app";
+  await signIn("google", { redirectTo });
 }
