@@ -55,7 +55,7 @@
    explícitamente "claro" con el selector). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --background: #14120d;
+    --background: #121212;
     --foreground: #f1ebdd;
 
     --brand-50: #142922;
@@ -84,9 +84,9 @@
     --ink-500: #948c78;
     --ink-300: #4a4638;
 
-    --surface: #1c1912;
-    --surface-muted: #241f16;
-    --border-soft: #3a3424;
+    --surface: #1a1a1a;
+    --surface-muted: #212120;
+    --border-soft: #35322c;
 
     --surface-inverted: #0a1712;
     --surface-inverted-foreground: #aee4c9;
@@ -96,7 +96,7 @@
 /* Modo oscuro elegido explícitamente con el selector (gana siempre,
    incluso si el sistema está en claro). */
 :root[data-theme="dark"] {
-  --background: #14120d;
+  --background: #121212;
   --foreground: #f1ebdd;
 
   --brand-50: #142922;
@@ -125,9 +125,9 @@
   --ink-500: #948c78;
   --ink-300: #4a4638;
 
-  --surface: #1c1912;
-  --surface-muted: #241f16;
-  --border-soft: #3a3424;
+  --surface: #1a1a1a;
+  --surface-muted: #212120;
+  --border-soft: #35322c;
 
   --surface-inverted: #0a1712;
   --surface-inverted-foreground: #aee4c9;
