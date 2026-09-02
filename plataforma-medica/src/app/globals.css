@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fbf7ee;
+  --foreground: #211d16;
+
+  /* Paleta "Galeno" — esmeralda profundo como color de marca (serio,
+     confiable, con vida) y dorado cálido como acento de estatus/premium,
+     sobre un marfil cálido en vez del blanco/gris frío típico de SaaS.
+     Deliberadamente sin cruces médicas ni azul de hospital genérico. */
+  --brand-50: #edf7f1;
+  --brand-100: #d3eedf;
+  --brand-200: #a8dcc0;
+  --brand-300: #78c59d;
+  --brand-400: #4ca97d;
+  --brand-500: #2e8c63;
+  --brand-600: #1f7150;
+  --brand-700: #1a5b41;
+  --brand-800: #164a36;
+  --brand-900: #0f3527;
+  --brand-950: #082018;
+
+  --accent-50: #fdf6e9;
+  --accent-100: #faeac6;
+  --accent-200: #f2d48a;
+  --accent-300: #eabd5e;
+  --accent-400: #e4a74a;
+  --accent-500: #d89226;
+  --accent-600: #b87511;
+  --accent-700: #8f5a0d;
+
+  --ink-900: #211d16;
+  --ink-700: #4b453b;
+  --ink-500: #7a7365;
+  --ink-300: #c4bcab;
+
+  --surface: #ffffff;
+  --surface-muted: #f7f1e4;
+  --border-soft: #e7dcc4;
+
+  /* Texto/iconos sobre superficies doradas sólidas (botón "accent",
+     indicadores en el mock del hero): siempre oscuro, en los dos temas —
+     el dorado nunca es lo bastante oscuro para llevar texto claro encima. */
+  --on-accent: #211d16;
+
+  /* Franja decorativa "invertida" (el CTA final de la landing): verde muy
+     oscuro con texto claro para contrastar con el resto de la página, que
+     en claro es marfil. En oscuro tiene su propio valor más abajo — casi
+     negro, para que combine con el fondo en vez de verse "menos oscura". */
+  --surface-inverted: #0f3527;
+  --surface-inverted-foreground: #d3eedf;
+}
+
+/* Modo oscuro por preferencia del sistema (cuando el usuario no eligió
+   explícitamente "claro" con el selector). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #14120d;
+    --foreground: #f1ebdd;
+
+    --brand-50: #142922;
+    --brand-100: #17392c;
+    --brand-200: #1f5138;
+    --brand-300: #2c7350;
+    --brand-400: #3f9968;
+    --brand-500: #4db07a;
+    --brand-600: #26805a;
+    --brand-700: #7cd6a8;
+    --brand-800: #a8e8c8;
+    --brand-900: #d3f5e4;
+    --brand-950: #eefcf5;
+
+    --accent-50: #2a2013;
+    --accent-100: #3a2c17;
+    --accent-200: #5c451f;
+    --accent-300: #8a661f;
+    --accent-400: #d3a13e;
+    --accent-500: #e2b158;
+    --accent-600: #f0c579;
+    --accent-700: #f6d699;
+
+    --ink-900: #f1ebdd;
+    --ink-700: #cdc4ae;
+    --ink-500: #948c78;
+    --ink-300: #4a4638;
+
+    --surface: #1c1912;
+    --surface-muted: #241f16;
+    --border-soft: #3a3424;
+
+    --surface-inverted: #0a1712;
+    --surface-inverted-foreground: #aee4c9;
+  }
+}
+
+/* Modo oscuro elegido explícitamente con el selector (gana siempre,
+   incluso si el sistema está en claro). */
+:root[data-theme="dark"] {
+  --background: #14120d;
+  --foreground: #f1ebdd;
+
+  --brand-50: #142922;
+  --brand-100: #17392c;
+  --brand-200: #1f5138;
+  --brand-300: #2c7350;
+  --brand-400: #3f9968;
+  --brand-500: #4db07a;
+  --brand-600: #26805a;
+  --brand-700: #7cd6a8;
+  --brand-800: #a8e8c8;
+  --brand-900: #d3f5e4;
+  --brand-950: #eefcf5;
+
+  --accent-50: #2a2013;
+  --accent-100: #3a2c17;
+  --accent-200: #5c451f;
+  --accent-300: #8a661f;
+  --accent-400: #d3a13e;
+  --accent-500: #e2b158;
+  --accent-600: #f0c579;
+  --accent-700: #f6d699;
+
+  --ink-900: #f1ebdd;
+  --ink-700: #cdc4ae;
+  --ink-500: #948c78;
+  --ink-300: #4a4638;
+
+  --surface: #1c1912;
+  --surface-muted: #241f16;
+  --border-soft: #3a3424;
+
+  --surface-inverted: #0a1712;
+  --surface-inverted-foreground: #aee4c9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+
+  --color-ink-900: var(--ink-900);
+  --color-ink-700: var(--ink-700);
+  --color-ink-500: var(--ink-500);
+  --color-ink-300: var(--ink-300);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border-soft: var(--border-soft);
+  --color-on-accent: var(--on-accent);
+  --color-surface-inverted: var(--surface-inverted);
+  --color-surface-inverted-foreground: var(--surface-inverted-foreground);
+
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
+}
+
+* {
+  border-color: var(--border-soft);
+}
+
+html {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-brand-600 text-white hover:bg-brand-700 shadow-sm shadow-brand-900/10;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-accent-400 text-on-accent hover:bg-accent-500 shadow-sm shadow-accent-700/20;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none border border-border-soft bg-surface text-ink-900 hover:bg-surface-muted;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none text-ink-700 hover:bg-surface-muted;
+  }
+
+  .card {
+    @apply rounded-2xl border border-border-soft bg-surface shadow-sm shadow-brand-900/5;
+  }
+
+  .badge-brand {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-50 text-brand-700;
+  }
+  .badge-accent {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-accent-50 text-accent-700;
+  }
+  .badge-muted {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-surface-muted text-ink-500;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-border-soft bg-surface px-4 py-2.5 text-sm text-ink-900 placeholder:text-ink-300 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100;
+  }
+
+  .progress-track {
+    @apply h-2 w-full overflow-hidden rounded-full bg-surface-muted;
+  }
+  .progress-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-[width] duration-500;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
+  }
+
+  .logo-wordmark {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}
