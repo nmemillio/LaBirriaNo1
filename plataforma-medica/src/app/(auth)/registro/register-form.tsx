@@ -6,17 +6,21 @@ import { authenticateWithGoogle } from "../login/actions";
 import { registerStudent } from "./actions";
 import { GoogleIcon } from "@/components/google-icon";
 
-export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
+export function RegisterForm({ googleEnabled, plan }: { googleEnabled: boolean; plan?: string }) {
   const [errorMessage, formAction, pending] = useActionState(registerStudent, undefined);
+  const loginHref = plan ? `/login?plan=${plan}` : "/login";
 
   return (
     <div className="card p-8">
       <h1 className="text-2xl font-bold text-ink-900">Crea tu cuenta</h1>
-      <p className="mt-1 text-sm text-ink-500">Empieza gratis con el semestre 1.</p>
+      <p className="mt-1 text-sm text-ink-500">
+        {plan ? "Crea tu cuenta para completar tu suscripción." : "Empieza gratis con el semestre 1."}
+      </p>
 
       {googleEnabled && (
         <>
           <form action={authenticateWithGoogle} className="mt-6">
+            {plan && <input type="hidden" name="plan" value={plan} />}
             <button type="submit" className="btn-outline w-full justify-center gap-3 py-2.5">
               <GoogleIcon />
               Continuar con Google
@@ -31,6 +35,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
       )}
 
       <form action={formAction} className={googleEnabled ? "" : "mt-6"} noValidate>
+        {plan && <input type="hidden" name="plan" value={plan} />}
         <div className="space-y-4">
           <label className="block">
             <span className="mb-1.5 block text-sm font-medium text-ink-700">Nombre completo</span>
@@ -55,7 +60,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
 
       <p className="mt-6 text-center text-sm text-ink-500">
         ¿Ya tienes cuenta?{" "}
-        <Link href="/login" className="font-semibold text-brand-600 hover:underline">
+        <Link href={loginHref} className="font-semibold text-brand-600 hover:underline">
           Inicia sesión
         </Link>
       </p>

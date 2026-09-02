@@ -50,8 +50,11 @@ export async function registerStudent(_prevState: string | undefined, formData: 
     },
   });
 
+  const planId = formData.get("plan");
+  const redirectTo = typeof planId === "string" && planId ? `/app/facturacion?comprar=${planId}` : "/app";
+
   try {
-    await signIn("credentials", { email: user.email, password, redirectTo: "/app" });
+    await signIn("credentials", { email: user.email, password, redirectTo });
   } catch (error) {
     if (error instanceof AuthError) {
       return "Tu cuenta se creó, pero no pudimos iniciar sesión automáticamente. Intenta entrar manualmente.";
