@@ -4,7 +4,7 @@ import { SignOutButton } from "@/components/sign-out-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const links = [
-  { href: "/app", label: "Mi panel" },
+  { href: "/app", label: "Aprendizaje" },
   { href: "/app/facturacion", label: "Facturación" },
   { href: "/app/perfil", label: "Mi perfil" },
 ];

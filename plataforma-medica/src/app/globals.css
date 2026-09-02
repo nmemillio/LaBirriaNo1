@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* En touch (sobre todo iOS Safari), un elemento con estilos :hover necesita
+   un primer toque para "activar" el hover y un segundo para el clic real —
+   se siente como que hay que darle doble clic a todo. Como hover: se usa en
+   casi todos los botones/links del sitio, esto redefine la variante para
+   que solo aplique en dispositivos que de verdad tienen mouse/hover. */
+@custom-variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 :root {
   --background: #fbf7ee;
   --foreground: #211d16;
