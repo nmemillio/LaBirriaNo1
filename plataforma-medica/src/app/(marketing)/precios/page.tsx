@@ -27,14 +27,14 @@ export default async function PricingPage() {
         </p>
       </div>
 
-      <div className="mx-auto mt-14 grid max-w-3xl gap-6 sm:grid-cols-2">
+      <div className="-mx-5 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:mx-auto sm:max-w-3xl sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0">
         {plans.map((plan, index) => {
           const features: string[] = JSON.parse(plan.features);
           const isPremium = index === 1;
           return (
             <div
               key={plan.id}
-              className={`card relative flex flex-col p-8 ${isPremium ? "border-brand-300 ring-1 ring-brand-200" : ""}`}
+              className={`card relative flex w-[82%] shrink-0 snap-center flex-col p-8 sm:w-auto sm:shrink ${isPremium ? "border-brand-300 ring-1 ring-brand-200" : ""}`}
             >
               {isPremium && (
                 <span className="badge-accent absolute -top-3 left-8">Apoya la plataforma</span>

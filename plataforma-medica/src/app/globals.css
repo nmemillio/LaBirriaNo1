@@ -43,9 +43,10 @@
      el dorado nunca es lo bastante oscuro para llevar texto claro encima. */
   --on-accent: #211d16;
 
-  /* Franjas decorativas "invertidas" (ej. el CTA final de la landing):
-     siempre verde oscuro con texto claro, en los dos temas — no deben
-     usar brand-900/brand-100 normales, que sí cambian con el tema. */
+  /* Franja decorativa "invertida" (el CTA final de la landing): verde muy
+     oscuro con texto claro para contrastar con el resto de la página, que
+     en claro es marfil. En oscuro tiene su propio valor más abajo — casi
+     negro, para que combine con el fondo en vez de verse "menos oscura". */
   --surface-inverted: #0f3527;
   --surface-inverted-foreground: #d3eedf;
 }
@@ -86,6 +87,9 @@
     --surface: #1c1912;
     --surface-muted: #241f16;
     --border-soft: #3a3424;
+
+    --surface-inverted: #0a1712;
+    --surface-inverted-foreground: #aee4c9;
   }
 }
 
@@ -124,6 +128,9 @@
   --surface: #1c1912;
   --surface-muted: #241f16;
   --border-soft: #3a3424;
+
+  --surface-inverted: #0a1712;
+  --surface-inverted-foreground: #aee4c9;
 }
 
 @theme inline {

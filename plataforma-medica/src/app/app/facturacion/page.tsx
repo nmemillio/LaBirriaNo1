@@ -44,6 +44,17 @@ export default async function BillingPage({
         <p className="text-sm text-ink-500">
           Estado: {subscription ? subscriptionStatusLabel(subscription.status) : "—"}
         </p>
+        {subscription?.cancelAtPeriodEnd && subscription.currentPeriodEnd && (
+          <p className="mt-2 rounded-xl bg-accent-50 px-3 py-2 text-sm text-accent-700">
+            Se cancelará el {subscription.currentPeriodEnd.toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" })}.
+            Mantienes el acceso hasta esa fecha; puedes reactivarla desde &quot;Administrar facturación&quot;.
+          </p>
+        )}
+        {!subscription?.cancelAtPeriodEnd && subscription?.currentPeriodEnd && subscription.status === "ACTIVE" && (
+          <p className="mt-2 text-xs text-ink-500">
+            Se renueva el {subscription.currentPeriodEnd.toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" })}.
+          </p>
+        )}
         <div className="mt-5 flex flex-wrap gap-3">
           <Link href="/precios" className="btn-primary">
             Cambiar de plan

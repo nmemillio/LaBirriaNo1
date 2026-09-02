@@ -146,6 +146,7 @@ async function ActiveContentViewer({
     const token = signContentToken({ contentId: content.id, userId, kind: "video" });
     return (
       <div>
+        <ContentTitle title={content.title} completed={completed} />
         <VideoPlayer
           contentId={content.id}
           src={`/api/content/${content.id}/video?t=${token}`}
@@ -153,7 +154,7 @@ async function ActiveContentViewer({
           completionThreshold={content.completionThreshold}
           initialPercent={watchedPercent}
         />
-        <ContentHeader title={content.title} description={content.description} completed={completed} />
+        <ContentExplanation description={content.description} />
       </div>
     );
   }
@@ -162,6 +163,7 @@ async function ActiveContentViewer({
     const token = signContentToken({ contentId: content.id, userId, kind: "document" });
     return (
       <div>
+        <ContentTitle title={content.title} completed={completed} />
         <PdfViewer
           contentId={content.id}
           src={`/api/content/${content.id}/document?t=${token}`}
@@ -169,7 +171,7 @@ async function ActiveContentViewer({
           fileName={content.document.fileName}
           alreadyCompleted={completed}
         />
-        <ContentHeader title={content.title} description={content.description} completed={completed} />
+        <ContentExplanation description={content.description} />
       </div>
     );
   }
@@ -193,19 +195,21 @@ async function ActiveContentViewer({
   return <div className="card p-8 text-center text-ink-500">Este contenido no está disponible todavía.</div>;
 }
 
-function ContentHeader({ title, description, completed }: { title: string; description: string | null; completed: boolean }) {
+function ContentTitle({ title, completed }: { title: string; completed: boolean }) {
   return (
-    <div className="mt-4">
-      <div className="flex items-start justify-between gap-4">
-        <h2 className="text-lg font-bold text-ink-900">{title}</h2>
-        {completed && <span className="badge-brand shrink-0">Completado</span>}
-      </div>
-      {description && (
-        <div className="mt-3 rounded-xl border border-border-soft bg-surface-muted px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Explicación</p>
-          <p className="mt-1 text-sm leading-relaxed text-ink-700">{description}</p>
-        </div>
-      )}
+    <div className="mb-3 flex items-start justify-between gap-4">
+      <h2 className="text-lg font-bold text-ink-900">{title}</h2>
+      {completed && <span className="badge-brand shrink-0">Completado</span>}
+    </div>
+  );
+}
+
+function ContentExplanation({ description }: { description: string | null }) {
+  if (!description) return null;
+  return (
+    <div className="mt-3 rounded-xl border border-border-soft bg-surface-muted px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Explicación</p>
+      <p className="mt-1 text-sm leading-relaxed text-ink-700">{description}</p>
     </div>
   );
 }
