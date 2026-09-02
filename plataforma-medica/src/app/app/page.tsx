@@ -5,7 +5,7 @@ import { getDashboardData } from "@/lib/dashboard";
 import { ProgressBar } from "@/components/progress-bar";
 import { ArrowRightIcon } from "@/components/icons";
 
-export const metadata: Metadata = { title: "Mi panel" };
+export const metadata: Metadata = { title: "Aprendizaje" };
 
 export default async function StudentDashboardPage() {
   const session = await auth();
