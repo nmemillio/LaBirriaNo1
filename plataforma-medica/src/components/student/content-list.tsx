@@ -1,7 +1,13 @@
 import Link from "next/link";
 import type { SectionNode, ContentState } from "@/lib/content-tree";
+import { LockIcon, CheckIcon, PlayIcon, FileTextIcon, QuizIcon } from "@/components/icons";
+import type { ComponentType } from "react";
 
-const typeIcon: Record<string, string> = { VIDEO: "▶", PDF: "📄", QUIZ: "📝" };
+const typeIcon: Record<string, ComponentType<{ className?: string }>> = {
+  VIDEO: PlayIcon,
+  PDF: FileTextIcon,
+  QUIZ: QuizIcon,
+};
 
 export function ContentList({
   subjectId,
@@ -56,11 +62,11 @@ function SectionBlock({
               className={`flex items-center gap-3 px-4 py-3 text-sm ${isActive ? "bg-brand-50" : "hover:bg-surface-muted"}`}
               style={{ paddingLeft: `${16 + depth * 16}px` }}
             >
-              <StatusIcon locked={locked} status={status} typeGlyph={typeIcon[content.type]} />
+              <StatusIcon locked={locked} status={status} TypeGlyph={typeIcon[content.type]} />
               <span className={`flex-1 ${locked ? "text-ink-300" : isActive ? "font-semibold text-brand-800" : "text-ink-900"}`}>
                 {content.title}
               </span>
-              {status === "COMPLETED" && !locked && <span className="text-xs text-brand-600">✓</span>}
+              {status === "COMPLETED" && !locked && <CheckIcon className="h-3.5 w-3.5 shrink-0 text-brand-600" />}
             </div>
           );
 
@@ -82,10 +88,32 @@ function SectionBlock({
   );
 }
 
-function StatusIcon({ locked, status, typeGlyph }: { locked: boolean; status: string; typeGlyph: string }) {
-  if (locked) return <span className="w-5 text-center text-ink-300">🔒</span>;
-  if (status === "COMPLETED") {
-    return <span className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-[10px] text-white">✓</span>;
+function StatusIcon({
+  locked,
+  status,
+  TypeGlyph,
+}: {
+  locked: boolean;
+  status: string;
+  TypeGlyph: ComponentType<{ className?: string }>;
+}) {
+  if (locked) {
+    return (
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center text-ink-300">
+        <LockIcon className="h-3.5 w-3.5" />
+      </span>
+    );
   }
-  return <span className="w-5 text-center text-ink-500">{typeGlyph}</span>;
+  if (status === "COMPLETED") {
+    return (
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
+        <CheckIcon className="h-3 w-3" />
+      </span>
+    );
+  }
+  return (
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-ink-500">
+      <TypeGlyph className="h-3.5 w-3.5" />
+    </span>
+  );
 }

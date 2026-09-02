@@ -110,6 +110,19 @@ QuizQuestion/QuizAnswer/QuizAttempt`, `ContentProgress`, `ManualUnlock`,
 - Panel `/admin/configuracion` para conectar Stripe pegando las claves
   desde el navegador (cifradas en la base de datos), con botón para
   probar la conexión y para quitar la configuración guardada.
+- `/admin/administradores`: crear nuevas cuentas admin o promover una
+  cuenta de estudiante existente, con protección para no quedarte sin
+  ningún administrador.
+- Modo claro/oscuro con selector (sol/luna) en cada barra de navegación,
+  sin parpadeo al cargar y persistido por dispositivo — todo el sistema de
+  color son variables CSS, así que ningún componente necesitó lógica propia
+  de tema.
+- Sin emojis: los íconos (candados, reproducir, documento, quiz, check,
+  flechas...) son SVG propios en `src/components/icons.tsx`.
+- Pensado para mobile: en la vista de una materia el video va primero y la
+  lista de contenido se colapsa detrás de "Ver contenido de la materia";
+  la tabla de usuarios del admin se vuelve una lista de tarjetas por debajo
+  de `sm`, mostrando solo lo esencial.
 
 ## Qué falta a propósito (siguiente fase, no simulado)
 

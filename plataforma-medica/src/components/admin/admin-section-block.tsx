@@ -4,6 +4,8 @@ import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { VideoUploadForm } from "@/components/admin/video-upload-form";
 import { PdfUploadForm } from "@/components/admin/pdf-upload-form";
+import { ReorderButtons } from "@/components/admin/reorder-buttons";
+import { CheckIcon, XIcon } from "@/components/icons";
 import {
   createSection,
   updateSection,
@@ -37,14 +39,12 @@ export function AdminSectionBlock({
   return (
     <div className="card p-5" style={{ marginLeft: depth * 20 }}>
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex flex-col gap-1">
-          <form action={moveSection.bind(null, subjectId, section.id, "up")}>
-            <button type="submit" disabled={index === 0} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▲</button>
-          </form>
-          <form action={moveSection.bind(null, subjectId, section.id, "down")}>
-            <button type="submit" disabled={index === siblingCount - 1} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▼</button>
-          </form>
-        </div>
+        <ReorderButtons
+          moveUpAction={moveSection.bind(null, subjectId, section.id, "up")}
+          moveDownAction={moveSection.bind(null, subjectId, section.id, "down")}
+          disableUp={index === 0}
+          disableDown={index === siblingCount - 1}
+        />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="font-semibold text-ink-900">{section.title}</h3>
@@ -88,14 +88,12 @@ export function AdminSectionBlock({
           {section.contents.map((content, cIndex) => (
             <li key={content.id} className="p-4">
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex flex-col gap-1">
-                  <form action={moveContent.bind(null, subjectId, content.id, "up")}>
-                    <button type="submit" disabled={cIndex === 0} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▲</button>
-                  </form>
-                  <form action={moveContent.bind(null, subjectId, content.id, "down")}>
-                    <button type="submit" disabled={cIndex === section.contents.length - 1} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▼</button>
-                  </form>
-                </div>
+                <ReorderButtons
+                  moveUpAction={moveContent.bind(null, subjectId, content.id, "up")}
+                  moveDownAction={moveContent.bind(null, subjectId, content.id, "down")}
+                  disableUp={cIndex === 0}
+                  disableDown={cIndex === section.contents.length - 1}
+                />
                 <span className="badge-muted">{CONTENT_TYPE_LABEL[content.type]}</span>
                 <div className="min-w-0 flex-1">
                   <p className="font-medium text-ink-900">{content.title}</p>
@@ -132,7 +130,13 @@ export function AdminSectionBlock({
                   <summary className="cursor-pointer font-medium text-brand-600">Editar</summary>
                   <form action={updateContentMeta.bind(null, subjectId, content.id)} className="mt-3 grid gap-2 sm:grid-cols-[1fr_2fr_auto_auto]">
                     <input className="input" type="text" name="title" defaultValue={content.title} required />
-                    <input className="input" type="text" name="description" defaultValue={content.description ?? ""} placeholder="Descripción" />
+                    <input
+                      className="input"
+                      type="text"
+                      name="description"
+                      defaultValue={content.description ?? ""}
+                      placeholder={content.type === "VIDEO" ? "Explicación para el estudiante (opcional)" : "Descripción (opcional)"}
+                    />
                     {content.type === "VIDEO" && (
                       <input
                         className="input"
@@ -162,10 +166,13 @@ export function AdminSectionBlock({
                               </ConfirmButton>
                             </form>
                           </div>
-                          <ul className="mt-1 space-y-0.5 text-ink-500">
+                          <ul className="mt-1 space-y-1">
                             {q.answers.map((a) => (
-                              <li key={a.id} className={a.isCorrect ? "font-semibold text-brand-600" : ""}>
-                                {a.isCorrect ? "✓ " : "— "}
+                              <li
+                                key={a.id}
+                                className={`flex items-center gap-1.5 ${a.isCorrect ? "font-semibold text-brand-600" : "text-ink-500"}`}
+                              >
+                                {a.isCorrect ? <CheckIcon className="h-3 w-3 shrink-0" /> : <XIcon className="h-3 w-3 shrink-0 opacity-40" />}
                                 {a.text}
                               </li>
                             ))}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { Logo } from "@/components/logo";
 import { MobileNavToggle } from "@/components/mobile-nav-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const links = [
   { href: "/", label: "Inicio" },
@@ -13,7 +14,7 @@ export async function SiteNav() {
   const homeHref = session?.user.role === "ADMIN" ? "/admin" : "/app";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border-soft bg-white/85 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border-soft bg-surface/85 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between">
         <Link href="/" aria-label="Galeno, inicio">
           <Logo />
@@ -32,6 +33,7 @@ export async function SiteNav() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           {session?.user ? (
             <Link href={homeHref} className="btn-primary">
               Ir a mi panel
@@ -48,11 +50,14 @@ export async function SiteNav() {
           )}
         </div>
 
-        <MobileNavToggle
-          links={links}
-          isAuthenticated={Boolean(session?.user)}
-          homeHref={homeHref}
-        />
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <MobileNavToggle
+            links={links}
+            isAuthenticated={Boolean(session?.user)}
+            homeHref={homeHref}
+          />
+        </div>
       </div>
     </header>
   );

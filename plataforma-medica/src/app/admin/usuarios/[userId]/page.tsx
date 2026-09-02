@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAllSemestersProgress, getProgressSummary } from "@/lib/progress";
 import { loadSubjectTree, computeContentStates, flattenContents } from "@/lib/content-tree";
+import { BackLink } from "@/components/admin/back-link";
 import { changeUserPlan, unlockContentForUser } from "../actions";
 
 export const metadata: Metadata = { title: "Admin · Detalle de usuario" };
@@ -34,7 +34,7 @@ export default async function AdminUserDetailPage({ params }: { params: Promise<
 
   return (
     <div className="container-page max-w-3xl py-8">
-      <Link href="/admin/usuarios" className="text-sm text-ink-500 hover:text-ink-900">← Usuarios</Link>
+      <BackLink href="/admin/usuarios" label="Usuarios" />
       <h1 className="mt-2 text-2xl font-bold text-ink-900">{user.name}</h1>
       <p className="text-ink-500">{user.email}</p>
 

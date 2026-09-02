@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { getDashboardData } from "@/lib/dashboard";
 import { ProgressBar } from "@/components/progress-bar";
+import { ArrowRightIcon } from "@/components/icons";
 
 export const metadata: Metadata = { title: "Mi panel" };
 
@@ -36,7 +37,10 @@ export default async function StudentDashboardPage() {
               <h2 className="mt-3 text-xl font-bold text-ink-900">{continueLearning.subject.title}</h2>
               <p className="mt-1 text-sm text-ink-500">{continueLearning.contentTitle}</p>
             </div>
-            <span className="btn-primary mt-6 w-fit">Continuar →</span>
+            <span className="btn-primary mt-6 w-fit">
+              Continuar
+              <ArrowRightIcon className="h-4 w-4" />
+            </span>
           </Link>
         ) : hasAnyContent ? (
           <div className="card flex flex-col items-start justify-center p-6">

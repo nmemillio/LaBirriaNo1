@@ -33,7 +33,7 @@ export function MobileNavToggle({ links, isAuthenticated, homeHref }: Props) {
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-16 border-b border-border-soft bg-white p-4 shadow-lg">
+        <div className="absolute inset-x-0 top-16 border-b border-border-soft bg-surface p-4 shadow-lg">
           <nav className="flex flex-col gap-1">
             {links.map((link) => (
               <Link

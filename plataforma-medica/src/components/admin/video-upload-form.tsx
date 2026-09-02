@@ -26,7 +26,7 @@ export function VideoUploadForm({
     return (
       <form action={createVideoContent.bind(null, subjectId, sectionId)} className="mt-3 space-y-2 rounded-lg bg-surface-muted p-3">
         <input className="input" type="text" name="title" placeholder="Título del video" required />
-        <input className="input" type="text" name="description" placeholder="Descripción (opcional)" />
+        <textarea className="input" name="description" placeholder="Explicación para el estudiante (opcional) — aparece debajo del video" rows={2} />
         <label className="block text-xs text-ink-500">
           % para completar
           <input className="input mt-1" type="number" name="completionThreshold" defaultValue={90} min={1} max={100} />
@@ -73,7 +73,7 @@ export function VideoUploadForm({
   return (
     <form onSubmit={handleSubmit} className="mt-3 space-y-2 rounded-lg bg-surface-muted p-3">
       <input className="input" type="text" name="title" placeholder="Título del video" required />
-      <input className="input" type="text" name="description" placeholder="Descripción (opcional)" />
+      <textarea className="input" name="description" placeholder="Explicación para el estudiante (opcional) — aparece debajo del video" rows={2} />
       <label className="block text-xs text-ink-500">
         % para completar
         <input className="input mt-1" type="number" name="completionThreshold" defaultValue={90} min={1} max={100} />

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CheckIcon, PlayIcon, LockIcon } from "@/components/icons";
 
 const steps = [
   {
@@ -125,13 +126,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="bg-brand-900">
+      <section className="bg-surface-inverted">
         <div className="container-page flex flex-col items-start gap-6 py-16 text-white sm:flex-row sm:items-center sm:justify-between sm:py-20">
           <div>
             <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
               Empieza con el semestre 1, sin costo.
             </h2>
-            <p className="mt-2 max-w-md text-brand-100">
+            <p className="mt-2 max-w-md text-surface-inverted-foreground">
               Crea tu cuenta y entra directo al temario. Puedes revisar los planes cuando quieras.
             </p>
           </div>
@@ -163,7 +164,10 @@ function HeroMock() {
         </div>
         <div className="aspect-video w-full bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-5">
           <div className="flex h-full flex-col justify-between">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">▶ Reproduciendo</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
+              <PlayIcon className="h-3 w-3" />
+              Reproduciendo
+            </span>
             <div>
               <div className="mb-2 h-1.5 w-full overflow-hidden rounded-full bg-white/25">
                 <div className="h-full w-2/3 rounded-full bg-white" />
@@ -186,7 +190,7 @@ function HeroMock() {
               >
                 {item.label}
               </span>
-              {item.state === "done" && <span className="text-xs font-semibold text-brand-600">✓</span>}
+              {item.state === "done" && <CheckIcon className="h-3.5 w-3.5 text-brand-600" />}
             </li>
           ))}
         </ul>
@@ -208,14 +212,22 @@ function HeroMock() {
 
 function StatusDot({ state }: { state: "done" | "active" | "locked" }) {
   if (state === "done") {
-    return <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-[10px] text-white">✓</span>;
+    return (
+      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-white">
+        <CheckIcon className="h-3 w-3" />
+      </span>
+    );
   }
   if (state === "active") {
-    return <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-400 text-[10px] text-ink-900">▶</span>;
+    return (
+      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-400 text-on-accent">
+        <PlayIcon className="h-3 w-3" />
+      </span>
+    );
   }
   return (
-    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-surface-muted text-[10px] text-ink-300">
-      🔒
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-surface-muted text-ink-300">
+      <LockIcon className="h-3 w-3" />
     </span>
   );
 }

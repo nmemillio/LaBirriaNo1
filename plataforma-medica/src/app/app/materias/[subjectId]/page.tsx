@@ -9,6 +9,7 @@ import { ContentList } from "@/components/student/content-list";
 import { VideoPlayer } from "@/components/student/video-player";
 import { PdfViewer } from "@/components/student/pdf-viewer";
 import { QuizView } from "@/components/student/quiz-view";
+import { LockIcon, ChevronLeftIcon, ChevronRightIcon } from "@/components/icons";
 
 export default async function SubjectPage({
   params,
@@ -54,7 +55,7 @@ export default async function SubjectPage({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
-        <div className="order-2 lg:order-1">
+        <div>
           {!activeContent ? (
             <div className="card p-8 text-center text-ink-500">
               Todavía no hay contenido publicado en esta materia.
@@ -62,9 +63,11 @@ export default async function SubjectPage({
           ) : !hasAccess ? (
             <LockedUpsell />
           ) : activeState?.locked ? (
-            <div className="card p-8 text-center">
-              <p className="text-4xl">🔒</p>
-              <p className="mt-3 font-semibold text-ink-900">Este contenido todavía está bloqueado</p>
+            <div className="card p-10 text-center">
+              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-ink-300">
+                <LockIcon className="h-5 w-5" />
+              </span>
+              <p className="mt-4 font-semibold text-ink-900">Este contenido todavía está bloqueado</p>
               <p className="mt-1 text-sm text-ink-500">Completa el contenido anterior para desbloquearlo.</p>
             </div>
           ) : (
@@ -80,23 +83,34 @@ export default async function SubjectPage({
             <div className="mt-4 flex items-center justify-between">
               {prev ? (
                 <Link href={`/app/materias/${subjectId}?item=${prev.id}`} className="btn-outline">
-                  ← Anterior
+                  <ChevronLeftIcon className="h-4 w-4" />
+                  Anterior
                 </Link>
               ) : (
                 <span />
               )}
               {next && !states.get(next.id)?.locked && (
                 <Link href={`/app/materias/${subjectId}?item=${next.id}`} className="btn-primary">
-                  Siguiente →
+                  Siguiente
+                  <ChevronRightIcon className="h-4 w-4" />
                 </Link>
               )}
             </div>
           )}
         </div>
 
-        <div className="order-1 lg:order-2">
+        <div className="hidden lg:block">
           <ContentList subjectId={subjectId} tree={tree} states={states} activeContentId={activeContent?.id ?? null} />
         </div>
+
+        <details className="lg:hidden">
+          <summary className="cursor-pointer rounded-full border border-border-soft bg-surface px-4 py-2.5 text-sm font-medium text-ink-700">
+            Ver contenido de la materia
+          </summary>
+          <div className="mt-3">
+            <ContentList subjectId={subjectId} tree={tree} states={states} activeContentId={activeContent?.id ?? null} />
+          </div>
+        </details>
       </div>
     </div>
   );
@@ -104,9 +118,11 @@ export default async function SubjectPage({
 
 function LockedUpsell() {
   return (
-    <div className="card p-8 text-center">
-      <p className="text-4xl">🔒</p>
-      <p className="mt-3 text-lg font-semibold text-ink-900">Contenido premium</p>
+    <div className="card p-10 text-center">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-50 text-accent-600">
+        <LockIcon className="h-5 w-5" />
+      </span>
+      <p className="mt-4 text-lg font-semibold text-ink-900">Contenido premium</p>
       <p className="mt-1 text-sm text-ink-500">Este contenido requiere una suscripción activa.</p>
       <Link href="/precios" className="btn-primary mt-5 inline-flex">
         Ver planes
@@ -179,12 +195,17 @@ async function ActiveContentViewer({
 
 function ContentHeader({ title, description, completed }: { title: string; description: string | null; completed: boolean }) {
   return (
-    <div className="mt-4 flex items-start justify-between gap-4">
-      <div>
+    <div className="mt-4">
+      <div className="flex items-start justify-between gap-4">
         <h2 className="text-lg font-bold text-ink-900">{title}</h2>
-        {description && <p className="mt-1 text-sm text-ink-500">{description}</p>}
+        {completed && <span className="badge-brand shrink-0">Completado</span>}
       </div>
-      {completed && <span className="badge-brand shrink-0">Completado</span>}
+      {description && (
+        <div className="mt-3 rounded-xl border border-border-soft bg-surface-muted px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Explicación</p>
+          <p className="mt-1 text-sm leading-relaxed text-ink-700">{description}</p>
+        </div>
+      )}
     </div>
   );
 }

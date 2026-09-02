@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { STATUS_OPTIONS, STATUS_BADGE_CLASS, STATUS_LABEL } from "@/lib/labels";
 import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
 import { ConfirmButton } from "@/components/admin/confirm-button";
+import { ReorderButtons } from "@/components/admin/reorder-buttons";
+import { ChevronRightIcon } from "@/components/icons";
 import { createSemester, updateSemester, setSemesterStatus, deleteSemester, moveSemester } from "./actions";
 
 export const metadata: Metadata = { title: "Admin · Semestres" };
@@ -31,14 +33,12 @@ export default async function AdminSemestersPage() {
         {semesters.map((semester, index) => (
           <li key={semester.id} className="card p-5">
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex flex-col gap-1">
-                <form action={moveSemester.bind(null, semester.id, "up")}>
-                  <button type="submit" disabled={index === 0} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▲</button>
-                </form>
-                <form action={moveSemester.bind(null, semester.id, "down")}>
-                  <button type="submit" disabled={index === semesters.length - 1} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▼</button>
-                </form>
-              </div>
+              <ReorderButtons
+                moveUpAction={moveSemester.bind(null, semester.id, "up")}
+                moveDownAction={moveSemester.bind(null, semester.id, "down")}
+                disableUp={index === 0}
+                disableDown={index === semesters.length - 1}
+              />
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -54,7 +54,8 @@ export default async function AdminSemestersPage() {
               </form>
 
               <Link href={`/admin/semestres/${semester.id}`} className="btn-outline">
-                Ver materias →
+                Ver materias
+                <ChevronRightIcon className="h-4 w-4" />
               </Link>
             </div>
 

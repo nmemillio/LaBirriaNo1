@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { SignOutButton } from "@/components/sign-out-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const links = [
   { href: "/app", label: "Mi panel" },
@@ -19,7 +20,7 @@ export function StudentShell({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-40 border-b border-border-soft bg-white">
+      <header className="sticky top-0 z-40 border-b border-border-soft bg-surface">
         <div className="container-page flex h-16 items-center justify-between gap-4">
           <Link href="/app">
             <Logo />
@@ -40,9 +41,10 @@ export function StudentShell({
               <p className="text-sm font-semibold text-ink-900">{userName}</p>
               <p className="text-xs text-ink-500">{userEmail}</p>
             </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700">
+            <div className="hidden h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700 sm:flex">
               {userName.charAt(0).toUpperCase()}
             </div>
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </div>

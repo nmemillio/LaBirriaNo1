@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { loadSubjectTree } from "@/lib/content-tree";
 import { isBlobConfigured } from "@/lib/storage";
 import { AdminSectionBlock } from "@/components/admin/admin-section-block";
+import { BackLink } from "@/components/admin/back-link";
 import { createSection } from "./actions";
 
 export const metadata: Metadata = { title: "Admin · Contenido de la materia" };
@@ -19,9 +19,7 @@ export default async function AdminSubjectDetailPage({ params }: { params: Promi
 
   return (
     <div className="container-page py-8">
-      <Link href={`/admin/semestres/${subject.semesterId}`} className="text-sm text-ink-500 hover:text-ink-900">
-        ← {subject.semester.title}
-      </Link>
+      <BackLink href={`/admin/semestres/${subject.semesterId}`} label={subject.semester.title} />
       <h1 className="mt-2 text-2xl font-bold text-ink-900">{subject.title}</h1>
       <p className="text-ink-500">Secciones y contenido de esta materia.</p>
 

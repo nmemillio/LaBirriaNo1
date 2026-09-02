@@ -5,6 +5,9 @@ import { prisma } from "@/lib/prisma";
 import { STATUS_OPTIONS, STATUS_BADGE_CLASS, STATUS_LABEL, UNLOCK_MODE_OPTIONS } from "@/lib/labels";
 import { AutoSubmitSelect } from "@/components/admin/auto-submit-select";
 import { ConfirmButton } from "@/components/admin/confirm-button";
+import { BackLink } from "@/components/admin/back-link";
+import { ReorderButtons } from "@/components/admin/reorder-buttons";
+import { ChevronRightIcon } from "@/components/icons";
 import { createSubject, updateSubject, setSubjectStatus, deleteSubject, moveSubject } from "./actions";
 
 export const metadata: Metadata = { title: "Admin · Materias" };
@@ -19,7 +22,7 @@ export default async function AdminSemesterDetailPage({ params }: { params: Prom
 
   return (
     <div className="container-page py-8">
-      <Link href="/admin/semestres" className="text-sm text-ink-500 hover:text-ink-900">← Semestres</Link>
+      <BackLink href="/admin/semestres" label="Semestres" />
       <h1 className="mt-2 text-2xl font-bold text-ink-900">{semester.title}</h1>
       <p className="text-ink-500">Materias de este semestre.</p>
 
@@ -33,14 +36,12 @@ export default async function AdminSemesterDetailPage({ params }: { params: Prom
         {semester.subjects.map((subject, index) => (
           <li key={subject.id} className="card p-5">
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex flex-col gap-1">
-                <form action={moveSubject.bind(null, semesterId, subject.id, "up")}>
-                  <button type="submit" disabled={index === 0} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▲</button>
-                </form>
-                <form action={moveSubject.bind(null, semesterId, subject.id, "down")}>
-                  <button type="submit" disabled={index === semester.subjects.length - 1} className="btn-ghost px-2 py-0.5 text-xs disabled:opacity-30">▼</button>
-                </form>
-              </div>
+              <ReorderButtons
+                moveUpAction={moveSubject.bind(null, semesterId, subject.id, "up")}
+                moveDownAction={moveSubject.bind(null, semesterId, subject.id, "down")}
+                disableUp={index === 0}
+                disableDown={index === semester.subjects.length - 1}
+              />
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -57,7 +58,8 @@ export default async function AdminSemesterDetailPage({ params }: { params: Prom
               </form>
 
               <Link href={`/admin/materias/${subject.id}`} className="btn-outline">
-                Administrar contenido →
+                Administrar contenido
+                <ChevronRightIcon className="h-4 w-4" />
               </Link>
             </div>
 
