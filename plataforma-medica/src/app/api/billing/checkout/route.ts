@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { getAppUrl } from "@/lib/app-url";
 
 export async function POST(req: Request) {
@@ -32,18 +32,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ redirectUrl: "/app/facturacion?activated=free" });
   }
 
-  if (!isStripeConfigured()) {
+  const stripe = await getStripe();
+  if (!stripe) {
     return NextResponse.json(
       {
         error: "stripe_not_configured",
         message:
-          "Stripe todavía no está conectado en este entorno. Configura STRIPE_SECRET_KEY para habilitar pagos con tarjeta.",
+          "Stripe todavía no está conectado. Un administrador puede conectarlo desde /admin/configuracion.",
       },
       { status: 503 },
     );
   }
-
-  const stripe = getStripe()!;
 
   let stripeCustomerId = (
     await prisma.subscription.findFirst({

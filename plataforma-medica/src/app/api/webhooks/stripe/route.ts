@@ -1,20 +1,24 @@
 import { NextResponse } from "next/server";
-import type Stripe from "stripe";
+import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
-import { getStripe } from "@/lib/stripe";
+import { getStripeConfig } from "@/lib/stripe";
 
 /**
  * El backend NUNCA confía en lo que el frontend dice sobre el plan del
  * usuario (punto 17). Este webhook es la única fuente de verdad para
  * activar, renovar o cancelar accesos — todo lo demás (checkout) solo
  * inicia el flujo, pero es este endpoint el que persiste el estado real.
+ *
+ * La clave y el secreto del webhook se resuelven igual que en checkout/
+ * portal: primero lo que haya guardado el admin en /admin/configuracion,
+ * si no, las variables de entorno.
  */
 export async function POST(req: Request) {
-  const stripe = getStripe();
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!stripe || !webhookSecret) {
+  const { secretKey, webhookSecret } = await getStripeConfig();
+  if (!secretKey || !webhookSecret) {
     return NextResponse.json({ error: "stripe_not_configured" }, { status: 503 });
   }
+  const stripe = new Stripe(secretKey);
 
   const signature = req.headers.get("stripe-signature");
   const payload = await req.text();

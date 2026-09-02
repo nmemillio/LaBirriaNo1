@@ -57,9 +57,18 @@ Decisiones clave:
   navegador — todo pasa por nuestras propias rutas `/api/content/...`.
 - **Stripe está integrado de verdad, no simulado.** `checkout.session.completed`,
   `customer.subscription.*` e `invoice.*` actualizan la suscripción real en
-  la base de datos vía webhook firmado. Sin `STRIPE_SECRET_KEY` configurada,
-  los botones de "Suscribirme" para planes de pago muestran un aviso claro
-  en vez de fallar; el plan gratuito siempre funciona sin Stripe.
+  la base de datos vía webhook firmado. Sin ninguna clave configurada, los
+  botones de "Suscribirme" para planes de pago muestran un aviso claro en
+  vez de fallar; el plan gratuito siempre funciona sin Stripe.
+- **Stripe se conecta desde `/admin/configuracion`, no solo por variables de
+  entorno.** El admin pega su Secret Key, Publishable Key y Webhook Secret
+  ahí mismo; se guardan cifradas (AES-256-GCM) en la base de datos con
+  `src/lib/crypto.ts`, nunca en texto plano, y solo se descifran en el
+  servidor al construir el cliente de Stripe (`src/lib/stripe.ts`). Sirve
+  para no depender de un redeploy cada vez que rotas una clave. Si no hay
+  nada guardado ahí, cae de vuelta a `STRIPE_SECRET_KEY`/
+  `STRIPE_WEBHOOK_SECRET` de las variables de entorno — ambos caminos
+  siguen funcionando.
 - **Reordenar es con botones ▲▼, no drag-and-drop.** Cumple la misma
   necesidad (el admin define el orden) sin la complejidad de una librería de
   DnD; se puede añadir arrastrar-y-soltar después sin tocar el modelo de datos.
@@ -98,6 +107,9 @@ QuizQuestion/QuizAnswer/QuizAttempt`, `ContentProgress`, `ManualUnlock`,
   desbloquear contenido).
 - Planes (Gratuito/Premium, mismas ventajas por ahora) + Stripe Checkout +
   Billing Portal + webhook firmado, listos para producción.
+- Panel `/admin/configuracion` para conectar Stripe pegando las claves
+  desde el navegador (cifradas en la base de datos), con botón para
+  probar la conexión y para quitar la configuración guardada.
 
 ## Qué falta a propósito (siguiente fase, no simulado)
 
@@ -160,13 +172,19 @@ almacenamiento de archivos accesibles desde Vercel. Pasos:
    entorno del proyecto.
 4. **Variables de entorno** (Project Settings → Environment Variables),
    además de las que Vercel ya agregó:
-   - `AUTH_SECRET` — genera uno con `openssl rand -base64 32`.
+   - `AUTH_SECRET` — genera uno con `openssl rand -base64 32`. También es la
+     clave con la que se cifran las credenciales de Stripe que guardes desde
+     `/admin/configuracion`, así que no la cambies después sin volver a
+     guardar esas claves.
    - `CONTENT_SIGNING_SECRET` — otro valor aleatorio distinto al anterior.
-   - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
-     `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — ver sección de Stripe abajo.
    - `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — opcional, para login con Google.
    - No hace falta `NEXTAUTH_URL`/`AUTH_URL`: `trustHost: true` hace que
      Auth.js use el dominio real de cada deploy automáticamente.
+   - **No hace falta poner las claves de Stripe aquí** — se conectan desde
+     el panel de administrador ya desplegado (ver siguiente sección). Si de
+     todos modos prefieres manejarlas por variable de entorno, `STRIPE_SECRET_KEY`/
+     `STRIPE_WEBHOOK_SECRET`/`NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` siguen
+     funcionando como respaldo cuando no hay nada guardado en la base de datos.
 5. **Deploy.** El comando de build ya incluye `prisma generate`
    (`package.json#scripts.build`); `postinstall` también corre
    `prisma generate` por si Vercel cachea `node_modules`.
@@ -182,32 +200,47 @@ almacenamiento de archivos accesibles desde Vercel. Pasos:
 
 ### Conectar Stripe en modo producción
 
-1. En el [Dashboard de Stripe](https://dashboard.stripe.com), activa el modo
-   Live (arriba a la derecha) cuando estés listo para cobrar de verdad — usa
-   modo Test mientras pruebas el flujo completo.
-2. Copia la **Secret key** a `STRIPE_SECRET_KEY` y la **Publishable key** a
-   `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
-3. Developers → Webhooks → Add endpoint: `https://tu-dominio/api/webhooks/stripe`,
-   eventos `checkout.session.completed`, `customer.subscription.created`,
-   `customer.subscription.updated`, `customer.subscription.deleted`,
-   `invoice.paid`, `invoice.payment_failed`. Copia el **Signing secret** a
-   `STRIPE_WEBHOOK_SECRET`.
-4. Con eso, el plan Premium ya cobra de verdad: Checkout crea el precio "al
-   vuelo" desde los datos del `Plan` en la base de datos (no hace falta
-   precrear Productos/Precios en Stripe, aunque puedes guardar un
-   `stripePriceId` real por plan desde `npm run db:studio` si prefieres
-   gestionar los precios directamente en Stripe).
-5. Prueba el flujo end-to-end con una
-   [tarjeta de prueba](https://docs.stripe.com/testing) en modo Test antes
-   de pasar a Live.
+Ya desplegada la app, conecta Stripe **desde el propio panel de
+administrador** — no hace falta tocar Vercel para esto:
 
-**Nunca compartas tus claves de Stripe por chat ni las commitees al repo** —
-van únicamente en las variables de entorno del proyecto en Vercel.
+1. Entra como admin (`admin@gmail.com` de la siembra, o tu propia cuenta
+   admin) y ve a **Configuración** en el menú → `/admin/configuracion`.
+2. En el [Dashboard de Stripe](https://dashboard.stripe.com/apikeys), con el
+   modo Test activo primero (arriba a la derecha), copia la **Secret key**
+   y la **Publishable key** y pégalas en el formulario.
+3. En Stripe: **Developers → Webhooks → Add endpoint**, con la URL
+   `https://tu-dominio/api/webhooks/stripe` y los eventos
+   `checkout.session.completed`, `customer.subscription.created`,
+   `customer.subscription.updated`, `customer.subscription.deleted`,
+   `invoice.paid`, `invoice.payment_failed`. Copia el **Signing secret**
+   (`whsec_...`) al tercer campo del formulario y guarda.
+4. Usa el botón **Probar conexión** para confirmar que la Secret Key es
+   válida antes de anunciar los pagos.
+5. Prueba el flujo completo con una
+   [tarjeta de prueba](https://docs.stripe.com/testing) en modo Test. El
+   plan Premium ya cobra: Checkout crea el precio "al vuelo" desde los
+   datos del `Plan` en la base de datos (no hace falta precrear
+   Productos/Precios en Stripe, aunque puedes guardar un `stripePriceId`
+   real por plan desde `npm run db:studio` si prefieres gestionarlos
+   directamente en Stripe).
+6. Cuando todo funcione, repite los pasos 2-4 con tus claves **Live** de
+   Stripe (arriba a la derecha en el Dashboard) para cobrar de verdad —
+   guardar las nuevas claves reemplaza solo lo que pegues; un campo que
+   dejes vacío conserva el valor anterior.
+
+Las claves quedan cifradas en la base de datos (nunca en texto plano) y
+solo se descifran en el servidor. Aun así, trátalas como cualquier
+credencial de producción: solo un admin de confianza debería tener acceso
+a `/admin/configuracion`, y nunca deberías pegar tu Secret Key en un chat,
+un issue o un mensaje — solo en ese formulario.
 
 ### Notas de seguridad para producción
 
 - Cambia `AUTH_SECRET` y `CONTENT_SIGNING_SECRET` por valores aleatorios
-  reales — los del `.env` de ejemplo son solo para desarrollo.
+  reales — los del `.env` de ejemplo son solo para desarrollo. Ten en
+  cuenta que `AUTH_SECRET` también cifra las claves de Stripe guardadas
+  desde `/admin/configuracion`; si alguna vez lo rotas, vuelve a pegar esas
+  claves después.
 - Restringe el acceso a tu base de datos de producción (IP allowlist o el
   pooler que ofrezca tu proveedor de Postgres).
 - El rate limiting y los backups de base de datos dependen del proveedor de

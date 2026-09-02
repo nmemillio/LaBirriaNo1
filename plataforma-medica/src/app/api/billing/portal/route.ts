@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { getAppUrl } from "@/lib/app-url";
 
 export async function POST(req: Request) {
@@ -10,7 +10,9 @@ export async function POST(req: Request) {
   if (!session?.user) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
-  if (!isStripeConfigured()) {
+
+  const stripe = await getStripe();
+  if (!stripe) {
     return NextResponse.json({ error: "stripe_not_configured" }, { status: 503 });
   }
 
@@ -22,7 +24,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "no_stripe_customer" }, { status: 404 });
   }
 
-  const stripe = getStripe()!;
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: subscription.stripeCustomerId,
     return_url: `${appUrl}/app/facturacion`,

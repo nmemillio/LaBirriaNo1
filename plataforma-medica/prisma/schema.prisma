@@ -414,3 +414,20 @@ model Payment {
 
   @@index([userId])
 }
+
+// ---------- Configuración de Stripe (editable desde /admin/configuracion) ----------
+
+// Fila única (id fijo "singleton"): permite conectar Stripe desde el panel
+// de administrador en vez de variables de entorno de Vercel. Las claves
+// secretas se guardan cifradas (AES-256-GCM, ver src/lib/crypto.ts) — nunca
+// en texto plano. Si esta fila no existe o no tiene una clave cargada, el
+// sistema cae de vuelta a STRIPE_SECRET_KEY/STRIPE_WEBHOOK_SECRET del
+// entorno (ver src/lib/stripe.ts), así que ambos caminos siguen funcionando.
+model StripeSettings {
+  id                     String   @id @default("singleton")
+  secretKeyEncrypted     String?
+  publishableKey         String?
+  webhookSecretEncrypted String?
+  updatedAt              DateTime @updatedAt
+  updatedById            String?
+}
