@@ -14,54 +14,56 @@
 }
 
 :root {
-  --background: #fbf7ee;
-  --foreground: #211d16;
+  --background: #f7f7f7;
+  --foreground: #111111;
 
-  /* Paleta "Galeno" — esmeralda profundo como color de marca (serio,
-     confiable, con vida) y dorado cálido como acento de estatus/premium,
-     sobre un marfil cálido en vez del blanco/gris frío típico de SaaS.
-     Deliberadamente sin cruces médicas ni azul de hospital genérico. */
-  --brand-50: #edf7f1;
-  --brand-100: #d3eedf;
-  --brand-200: #a8dcc0;
-  --brand-300: #78c59d;
-  --brand-400: #4ca97d;
-  --brand-500: #2e8c63;
-  --brand-600: #1f7150;
-  --brand-700: #1a5b41;
-  --brand-800: #164a36;
-  --brand-900: #0f3527;
-  --brand-950: #082018;
+  /* Paleta "Galeno" v2 — inspirada en marcas suizas (On, FIGS): base
+     blanco/gris neutro, tipografía haciendo el trabajo pesado, y un solo
+     rojo confiado ("brand" suizo) reservado para detalles pequeños y
+     deliberados — logo, insignias, el plan destacado, focus rings.
+     Nunca una cruz, nunca una superficie roja grande. El gris ("brand")
+     es el color que de verdad carga la interfaz: botones, links, barras
+     de progreso — como el negro/gris de un póster suizo clásico. */
+  --brand-50: #f4f4f4;
+  --brand-100: #e7e7e7;
+  --brand-200: #d1d1d1;
+  --brand-300: #adadad;
+  --brand-400: #868686;
+  --brand-500: #5f5f5f;
+  --brand-600: #2c2c2c;
+  --brand-700: #181818;
+  --brand-800: #111111;
+  --brand-900: #0a0a0a;
+  --brand-950: #000000;
 
-  --accent-50: #fdf6e9;
-  --accent-100: #faeac6;
-  --accent-200: #f2d48a;
-  --accent-300: #eabd5e;
-  --accent-400: #e4a74a;
-  --accent-500: #d89226;
-  --accent-600: #b87511;
-  --accent-700: #8f5a0d;
+  --accent-50: #fdecec;
+  --accent-100: #fad3d1;
+  --accent-200: #f1a6a1;
+  --accent-300: #e57970;
+  --accent-400: #d1493d;
+  --accent-500: #b8291b;
+  --accent-600: #931f14;
+  --accent-700: #6e160e;
 
-  --ink-900: #211d16;
-  --ink-700: #4b453b;
-  --ink-500: #7a7365;
-  --ink-300: #c4bcab;
+  --ink-900: #111111;
+  --ink-700: #4d4d4d;
+  --ink-500: #797979;
+  --ink-300: #cfcfcf;
 
   --surface: #ffffff;
-  --surface-muted: #f7f1e4;
-  --border-soft: #e7dcc4;
+  --surface-muted: #f0f0f0;
+  --border-soft: #e2e2e2;
 
-  /* Texto/iconos sobre superficies doradas sólidas (botón "accent",
-     indicadores en el mock del hero): siempre oscuro, en los dos temas —
-     el dorado nunca es lo bastante oscuro para llevar texto claro encima. */
-  --on-accent: #211d16;
+  /* Texto/iconos sobre el rojo sólido (botón/insignia "accent"): siempre
+     claro — el rojo suizo es lo bastante oscuro para cargar texto blanco
+     en ambos temas. */
+  --on-accent: #ffffff;
 
-  /* Franja decorativa "invertida" (el CTA final de la landing): verde muy
-     oscuro con texto claro para contrastar con el resto de la página, que
-     en claro es marfil. En oscuro tiene su propio valor más abajo — casi
-     negro, para que combine con el fondo en vez de verse "menos oscura". */
-  --surface-inverted: #0f3527;
-  --surface-inverted-foreground: #d3eedf;
+  /* Franja decorativa "invertida" (el CTA final de la landing): casi
+     negro con texto claro, un póster suizo clásico. En oscuro tiene su
+     propio valor más abajo, más cerca del negro puro. */
+  --surface-inverted: #141414;
+  --surface-inverted-foreground: #f5f5f5;
 }
 
 /* Modo oscuro por preferencia del sistema (cuando el usuario no eligió
@@ -69,40 +71,40 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --background: #121212;
-    --foreground: #f1ebdd;
+    --foreground: #f2f2f2;
 
-    --brand-50: #142922;
-    --brand-100: #17392c;
-    --brand-200: #1f5138;
-    --brand-300: #2c7350;
-    --brand-400: #3f9968;
-    --brand-500: #4db07a;
-    --brand-600: #26805a;
-    --brand-700: #7cd6a8;
-    --brand-800: #a8e8c8;
-    --brand-900: #d3f5e4;
-    --brand-950: #eefcf5;
+    --brand-50: #1c1c1c;
+    --brand-100: #262626;
+    --brand-200: #333333;
+    --brand-300: #454545;
+    --brand-400: #5c5c5c;
+    --brand-500: #7a7a7a;
+    --brand-600: #3a3a3a;
+    --brand-700: #4a4a4a;
+    --brand-800: #cfcfcf;
+    --brand-900: #e8e8e8;
+    --brand-950: #ffffff;
 
-    --accent-50: #2a2013;
-    --accent-100: #3a2c17;
-    --accent-200: #5c451f;
-    --accent-300: #8a661f;
-    --accent-400: #d3a13e;
-    --accent-500: #e2b158;
-    --accent-600: #f0c579;
-    --accent-700: #f6d699;
+    --accent-50: #241412;
+    --accent-100: #341c19;
+    --accent-200: #5c2620;
+    --accent-300: #9c3a2c;
+    --accent-400: #d1493d;
+    --accent-500: #e0685a;
+    --accent-600: #ec8a7e;
+    --accent-700: #f5b2a8;
 
-    --ink-900: #f1ebdd;
-    --ink-700: #cdc4ae;
-    --ink-500: #948c78;
-    --ink-300: #4a4638;
+    --ink-900: #f2f2f2;
+    --ink-700: #c9c9c9;
+    --ink-500: #949494;
+    --ink-300: #3f3f3f;
 
     --surface: #1a1a1a;
-    --surface-muted: #212120;
-    --border-soft: #35322c;
+    --surface-muted: #212121;
+    --border-soft: #333333;
 
-    --surface-inverted: #0a1712;
-    --surface-inverted-foreground: #aee4c9;
+    --surface-inverted: #0a0a0a;
+    --surface-inverted-foreground: #f0f0f0;
   }
 }
 
@@ -110,40 +112,40 @@
    incluso si el sistema está en claro). */
 :root[data-theme="dark"] {
   --background: #121212;
-  --foreground: #f1ebdd;
+  --foreground: #f2f2f2;
 
-  --brand-50: #142922;
-  --brand-100: #17392c;
-  --brand-200: #1f5138;
-  --brand-300: #2c7350;
-  --brand-400: #3f9968;
-  --brand-500: #4db07a;
-  --brand-600: #26805a;
-  --brand-700: #7cd6a8;
-  --brand-800: #a8e8c8;
-  --brand-900: #d3f5e4;
-  --brand-950: #eefcf5;
+  --brand-50: #1c1c1c;
+  --brand-100: #262626;
+  --brand-200: #333333;
+  --brand-300: #454545;
+  --brand-400: #5c5c5c;
+  --brand-500: #7a7a7a;
+  --brand-600: #3a3a3a;
+  --brand-700: #4a4a4a;
+  --brand-800: #cfcfcf;
+  --brand-900: #e8e8e8;
+  --brand-950: #ffffff;
 
-  --accent-50: #2a2013;
-  --accent-100: #3a2c17;
-  --accent-200: #5c451f;
-  --accent-300: #8a661f;
-  --accent-400: #d3a13e;
-  --accent-500: #e2b158;
-  --accent-600: #f0c579;
-  --accent-700: #f6d699;
+  --accent-50: #241412;
+  --accent-100: #341c19;
+  --accent-200: #5c2620;
+  --accent-300: #9c3a2c;
+  --accent-400: #d1493d;
+  --accent-500: #e0685a;
+  --accent-600: #ec8a7e;
+  --accent-700: #f5b2a8;
 
-  --ink-900: #f1ebdd;
-  --ink-700: #cdc4ae;
-  --ink-500: #948c78;
-  --ink-300: #4a4638;
+  --ink-900: #f2f2f2;
+  --ink-700: #c9c9c9;
+  --ink-500: #949494;
+  --ink-300: #3f3f3f;
 
   --surface: #1a1a1a;
-  --surface-muted: #212120;
-  --border-soft: #35322c;
+  --surface-muted: #212121;
+  --border-soft: #333333;
 
-  --surface-inverted: #0a1712;
-  --surface-inverted-foreground: #aee4c9;
+  --surface-inverted: #0a0a0a;
+  --surface-inverted-foreground: #f0f0f0;
 }
 
 @theme inline {
