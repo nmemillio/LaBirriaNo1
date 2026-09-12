@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-screen flex-col bg-surface-muted">
       <header className="container-page flex h-16 items-center justify-between">
-        <Link href="/" aria-label="Galeno, inicio">
+        <Link href="/" aria-label="Codón, inicio">
           <Logo />
         </Link>
         <ThemeToggle />

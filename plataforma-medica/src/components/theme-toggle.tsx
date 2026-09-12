@@ -40,7 +40,7 @@ export function ThemeToggle({ className }: { className?: string }) {
 
   function toggle() {
     const next: Theme = theme === "dark" ? "light" : "dark";
-    window.localStorage.setItem("galeno-theme", next);
+    window.localStorage.setItem("codon-theme", next);
     document.documentElement.setAttribute("data-theme", next);
     notify();
   }

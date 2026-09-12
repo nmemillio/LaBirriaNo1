@@ -124,9 +124,9 @@ function LockedUpsell() {
       </span>
       <p className="mt-4 text-lg font-semibold text-ink-900">Contenido premium</p>
       <p className="mt-1 text-sm text-ink-500">Este contenido requiere una suscripción activa.</p>
-      <Link href="/precios" className="btn-primary mt-5 inline-flex">
+      <a href="/precios" className="btn-primary mt-5 inline-flex">
         Ver planes
-      </Link>
+      </a>
     </div>
   );
 }

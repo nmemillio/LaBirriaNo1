@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 type Props = {
   links: { href: string; label: string }[];
@@ -36,28 +35,31 @@ export function MobileNavToggle({ links, isAuthenticated, homeHref }: Props) {
         <div className="absolute inset-x-0 top-16 border-b border-border-soft bg-surface p-4 shadow-lg">
           <nav className="flex flex-col gap-1">
             {links.map((link) => (
-              <Link
+              // <a> a propósito, no <Link>: fuerza una carga completa para que
+              // esta barra siempre refleje la sesión real, en vez de arrastrar
+              // el header que Next.js mantiene en caché entre navegaciones.
+              <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-surface-muted"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border-soft pt-3">
               {isAuthenticated ? (
-                <Link href={homeHref} className="btn-primary justify-center" onClick={() => setOpen(false)}>
+                <a href={homeHref} className="btn-primary justify-center" onClick={() => setOpen(false)}>
                   Ir a mi panel
-                </Link>
+                </a>
               ) : (
                 <>
-                  <Link href="/login" className="btn-outline justify-center" onClick={() => setOpen(false)}>
+                  <a href="/login" className="btn-outline justify-center" onClick={() => setOpen(false)}>
                     Iniciar sesión
-                  </Link>
-                  <Link href="/registro" className="btn-primary justify-center" onClick={() => setOpen(false)}>
+                  </a>
+                  <a href="/registro" className="btn-primary justify-center" onClick={() => setOpen(false)}>
                     Comenzar gratis
-                  </Link>
+                  </a>
                 </>
               )}
             </div>

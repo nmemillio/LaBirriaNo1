@@ -17,8 +17,8 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "Galeno | Plataforma educativa de medicina",
-    template: "%s | Galeno",
+    default: "Codón | Plataforma educativa de medicina",
+    template: "%s | Codón",
   },
   description:
     "Aprende medicina por semestres con video clases, PDFs y quizzes. Progreso real, contenido desbloqueado a tu ritmo.",
@@ -35,7 +35,7 @@ export const viewport: Viewport = {
 // parpadeo claro→oscuro al cargar. Solo toca el atributo cuando el usuario
 // eligió explícitamente un tema; si no, manda la preferencia del sistema
 // (ya cubierta por CSS puro en globals.css).
-const themeInitScript = `(function(){try{var t=localStorage.getItem('galeno-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
+const themeInitScript = `(function(){try{var t=localStorage.getItem('codon-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

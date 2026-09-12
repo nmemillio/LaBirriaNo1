@@ -12,7 +12,7 @@ function getKey() {
   if (!secret) {
     throw new Error("AUTH_SECRET no está configurado — hace falta para cifrar/leer secretos guardados.");
   }
-  return crypto.createHash("sha256").update(secret).update("galeno-settings-v1").digest();
+  return crypto.createHash("sha256").update(secret).update("codon-settings-v1").digest();
 }
 
 export function encryptSecret(plain: string): string {
