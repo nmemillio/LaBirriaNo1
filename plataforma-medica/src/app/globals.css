@@ -186,7 +186,6 @@
   --color-surface-inverted-foreground: var(--surface-inverted-foreground);
 
   --font-sans: var(--font-jakarta);
-  --font-display: var(--font-fraunces);
 }
 
 * {
@@ -213,16 +212,16 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-brand-600 text-white hover:bg-brand-700 shadow-sm shadow-brand-900/10;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-brand-600 text-white hover:bg-brand-700 shadow-sm shadow-brand-900/10;
   }
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-accent-400 text-on-accent hover:bg-accent-500 shadow-sm shadow-accent-700/20;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none bg-accent-400 text-on-accent hover:bg-accent-500 shadow-sm shadow-accent-700/20;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none border border-border-soft bg-surface text-ink-900 hover:bg-surface-muted;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none border border-border-soft bg-surface text-ink-900 hover:bg-surface-muted;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none text-ink-700 hover:bg-surface-muted;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none text-ink-700 hover:bg-surface-muted;
   }
 
   .card {
@@ -255,8 +254,8 @@ body {
   }
 
   .logo-wordmark {
-    font-family: var(--font-display), Georgia, serif;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 }
