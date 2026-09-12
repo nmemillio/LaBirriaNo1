@@ -1,13 +1,14 @@
-# Galeno — plataforma educativa de medicina
+# Codón — plataforma educativa de medicina
 
 Aplicación full-stack (Next.js 16 App Router + Prisma) para cursos de medicina
 organizados por semestre → materia → sección → contenido (video/PDF/quiz),
 con progreso real, contenido que se desbloquea a tu ritmo, y planes de
 suscripción conectados a Stripe.
 
-El nombre **Galeno** hace referencia a Claudio Galeno, el médico de la
-antigüedad cuyas enseñanzas definieron la formación médica durante siglos —
-un guiño apropiado para una plataforma de educación médica.
+El nombre **Codón** hace referencia a la unidad de tres nucleótidos con la
+que el ADN "programa" una proteína — el cruce entre medicina molecular y
+tecnología que le da identidad a la plataforma (código genético / código de
+software).
 
 Vive como proyecto independiente dentro de este repo, en `plataforma-medica/`,
 junto al sitio estático de "LA BIRRIA No 1" en la raíz — son dos aplicaciones
@@ -157,7 +158,7 @@ Abre http://localhost:3000.
 Si no tienes Postgres instalado, la forma más rápida es una base gratuita en
 [Neon](https://neon.tech) o [Supabase](https://supabase.com) — copia la
 connection string que te den a `DATABASE_URL` en `.env`. También puedes usar
-Docker: `docker run -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=galeno -p 5432:5432 postgres:16`.
+Docker: `docker run -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=codon -p 5432:5432 postgres:16`.
 
 Sin `BLOB_READ_WRITE_TOKEN` en `.env`, las subidas de video/PDF caen a disco
 local automáticamente — no necesitas Vercel Blob para desarrollar.

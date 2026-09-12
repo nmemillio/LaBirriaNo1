@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { auth } from "@/auth";
 import { getUserActiveSubscription } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
@@ -76,9 +75,9 @@ export default async function BillingPage({
           </p>
         )}
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link href="/precios" className="btn-primary">
+          <a href="/precios" className="btn-primary">
             Cambiar de plan
-          </Link>
+          </a>
           {subscription?.stripeCustomerId && <ManageBillingButton />}
         </div>
       </div>
