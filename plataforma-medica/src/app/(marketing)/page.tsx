@@ -162,7 +162,9 @@ function HeroMock() {
           <span className="h-2.5 w-2.5 rounded-full bg-ink-300" />
           <span className="ml-2 text-xs font-medium text-ink-500">Semestre 1 · Anatomía</span>
         </div>
-        <div className="aspect-video w-full bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-5">
+        {/* Fondo fijo, no ligado al tema: una pantalla de video siempre se ve
+            oscura, en claro y en oscuro — igual que el reproductor real. */}
+        <div className="aspect-video w-full bg-gradient-to-br from-neutral-700 via-neutral-800 to-neutral-900 p-5">
           <div className="flex h-full flex-col justify-between">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
               <PlayIcon className="h-3 w-3" />
@@ -204,8 +206,7 @@ function HeroMock() {
           </div>
         </div>
       </div>
-      <div className="absolute -right-6 -top-6 -z-10 hidden h-40 w-40 rounded-full bg-accent-100 sm:block" />
-      <div className="absolute -bottom-8 -left-8 -z-10 hidden h-32 w-32 rounded-full bg-brand-100 sm:block" />
+      <div className="absolute -right-5 -top-5 -z-10 hidden h-24 w-24 rounded-2xl border-2 border-accent-400/30 sm:block" />
     </div>
   );
 }
